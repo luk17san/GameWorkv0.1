@@ -1,0 +1,27 @@
+newmtl WoodDark
+Kd 0.20 0.075 0.028
+Ns 20
+newmtl WoodLight
+Kd 0.48 0.22 0.07
+Ns 15
+newmtl WoodRed
+Kd 0.38 0.035 0.025
+Ns 25
+newmtl SailCream
+Kd 0.90 0.78 0.53
+Ns 8
+newmtl AccentRed
+Kd 0.65 0.025 0.018
+Ns 30
+newmtl AccentGold
+Kd 0.80 0.48 0.08
+Ns 55
+newmtl Rope
+Kd 0.18 0.10 0.045
+Ns 5
+newmtl Iron
+Kd 0.08 0.07 0.06
+Ns 70
+newmtl Glow
+Kd 1.0 0.48 0.06
+Ns 90
