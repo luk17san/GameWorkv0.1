@@ -1,0 +1,4 @@
+repository "GameWorkv0.1/GameWorkv0.1@1374448180080@cloud"
+  path "/"
+    br "/main"
+    co "/main"
