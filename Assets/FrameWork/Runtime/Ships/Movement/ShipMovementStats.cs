@@ -26,6 +26,8 @@ namespace GameWork.Framework.Ships.Movement
         public float MaxForwardSpeed => maxForwardSpeed;
         public float Acceleration => acceleration;
         public float BrakingMultiplier => brakingMultiplier;
+        public float MaxReverseSpeedRatio => maxReverseSpeedRatio;
+        public float ReverseAccelerationRatio => reverseAccelerationRatio;
         public float MaxReverseSpeed => maxForwardSpeed * maxReverseSpeedRatio;
         public float ReverseAcceleration => acceleration * reverseAccelerationRatio;
         public float BaseTurnSpeed => baseTurnSpeed;
