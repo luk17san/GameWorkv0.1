@@ -42,7 +42,29 @@ Dodano pierwszą warstwę danych systemu ruchu:
 - Nie uruchomiono Unity ani kompilacji projektu.
 - Nie przetestowano zachowania statku w Play Mode.
 - Pliki `.meta` dla nowych folderów i skryptów muszą zostać wygenerowane przez Unity po pobraniu gałęzi, a następnie dodane do repozytorium.
-- Na tym etapie klasy przechowują i obliczają dane; nie poruszają jeszcze obiektu.
+- Dodano kontroler poruszający Rigidbody, ale nie zweryfikowano go jeszcze w scenie.
+- Kierunek skrętu podczas cofania nie jest obecnie odwracany.
+
+## Dalsze zmiany przygotowane w chmurze
+
+- `ShipMovementInput.cs`
+  - korzysta z Input System i akcji Vector2;
+  - jest przeznaczony do podpięcia do istniejącej akcji `Player/Move`;
+  - nie używa starego `UnityEngine.Input`.
+- `ShipMovementController.cs`
+  - zapamiętuje prędkość po puszczeniu W;
+  - realizuje hamowanie oraz zabezpieczone cofanie;
+  - oblicza kary od ładunku i mnożniki uszkodzeń;
+  - zachowuje obracanie na postoju;
+  - przyjmuje zewnętrzną prędkość wiatru i prądów;
+  - porusza statek przez `Rigidbody.MovePosition` i `MoveRotation`.
+
+## Konfiguracja wymagana w Unity
+
+1. Dodać `ShipMovementInput` oraz `ShipMovementController` do obiektu statku.
+2. W polu Movement Action przypisać `Player/Move` z `InputSystem_Actions`.
+3. Przypisać utworzone zasoby Movement Stats i Cargo Stats.
+4. Rigidbody powinien mieć zablokowany obrót osi X i Z.
 
 ## Następny krok
 
@@ -50,4 +72,4 @@ Dodano pierwszą warstwę danych systemu ruchu:
 2. Otworzyć projekt w Unity i pozwolić edytorowi wygenerować pliki `.meta`.
 3. Sprawdzić Console pod kątem błędów kompilacji.
 4. Utworzyć zasoby `ShipMovementStats` i `ShipCargoStats` w Inspectorze.
-5. Następnie dodać `ShipMovementInput` oraz `ShipMovementController`.
+5. Dodać komponenty do prostego obiektu testowego i sprawdzić W/S/A/D, utrzymywanie prędkości, obrót na postoju oraz cofanie.
