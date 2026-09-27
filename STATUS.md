@@ -1,29 +1,53 @@
 # Stan projektu
 
-Data: 2026-09-26
+Data: 2026-09-27
 
 ## Zweryfikowana baza
 
 - Repozytorium: https://github.com/luk17san/GameWorkv0.1
-- Sprawdzony commit bazowy: 572adad1d7e6ee242a881039f0f665d454534d94
 - Unity: 6000.6.3f1.
 - URP: 17.6.0; Input System: 1.20.0.
-- Manifest zawiera AI Assistant 2.20.0-pre.1 i Unity Pipeline 0.8.0-exp.1. Nie zweryfikowano działania tych integracji.
 - Scena: Assets/Scenes/SampleScene.unity.
-- Znalezione skrypty C# należą do TutorialInfo; nie znaleziono własnych skryptów rozgrywki.
-- Przygotowano PLAN.md, STATUS.md i AGENTS.md.
+- Framework pozostaje niezależny od Assets/ThePirate.
 
 ## Aktywne zadanie
 
-Etap 0: przygotować i zweryfikować czystą scenę testową.
+Etap 1: przygotowanie systemu ruchu statku.
 
-## Następne kroki na komputerze
+Gałąź do przeglądu: `feature/ship-movement-data`.
 
-1. Dodać trzy pliki dokumentacji do głównego folderu projektu i wysłać do repozytorium.
-2. Otworzyć projekt w Unity 6000.6.3f1 i poczekać na zakończenie importu.
-3. Otworzyć SampleScene, wejść w Play Mode i sprawdzić Console.
-4. Zapisać tutaj wynik: czy scena działa oraz ewentualne błędy.
+## Zmiany przygotowane w chmurze
+
+Dodano pierwszą warstwę danych systemu ruchu:
+
+- `Assets/FrameWork/Runtime/Ships/Movement/ShipMovementStats.cs`
+  - prędkość maksymalna, przyspieszenie i mnożnik hamowania;
+  - procentowe parametry cofania;
+  - konfigurowalne punkty zależności zwrotności od prędkości;
+  - statek zachowuje 60% domyślnej sterowności na postoju.
+- `Assets/FrameWork/Runtime/Ships/Movement/ShipCargoStats.cs`
+  - limit ładowności;
+  - blokada przekroczenia pojemności;
+  - konfigurowalny próg rozpoczęcia kar, domyślnie 40%;
+  - osobne kary prędkości i przyspieszenia przy pełnym załadunku.
+- `Assets/FrameWork/Runtime/Ships/Movement/ShipMovementState.cs`
+  - stan prędkości zadanej i rzeczywistej;
+  - efektywne osiągi;
+  - prędkość środowiskowa;
+  - stan napędu oraz przygotowanie cofania.
 
 ## Weryfikacja i ograniczenia
 
-Przeczytano pliki repozytorium, wersję edytora, manifest i .gitignore. Nie uruchamiano Unity, kompilacji ani rozgrywki. Nie skonfigurowano połączenia Codex Cloud ani zdalnego dostępu do komputera. Dokumentację przygotowano lokalnie; nie wysłano zmian na GitHub.
+- Sprawdzono strukturę i składnię plików poza Unity.
+- Nie uruchomiono Unity ani kompilacji projektu.
+- Nie przetestowano zachowania statku w Play Mode.
+- Pliki `.meta` dla nowych folderów i skryptów muszą zostać wygenerowane przez Unity po pobraniu gałęzi, a następnie dodane do repozytorium.
+- Na tym etapie klasy przechowują i obliczają dane; nie poruszają jeszcze obiektu.
+
+## Następny krok
+
+1. Pobrać gałąź `feature/ship-movement-data` na komputer.
+2. Otworzyć projekt w Unity i pozwolić edytorowi wygenerować pliki `.meta`.
+3. Sprawdzić Console pod kątem błędów kompilacji.
+4. Utworzyć zasoby `ShipMovementStats` i `ShipCargoStats` w Inspectorze.
+5. Następnie dodać `ShipMovementInput` oraz `ShipMovementController`.
