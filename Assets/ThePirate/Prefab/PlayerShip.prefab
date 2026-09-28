@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5592865605517446517}
   - component: {fileID: 2575902556511452390}
-  - component: {fileID: 1950378122580435235}
-  - component: {fileID: 9111669334125293663}
   - component: {fileID: 4705141275533751484}
+  - component: {fileID: 7395029471836222343}
+  - component: {fileID: 1289158629151891081}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -62,37 +62,8 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 84
-  m_CollisionDetection: 0
---- !u!114 &1950378122580435235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3628663861168553780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 875ad8d9b39080544b08feef0aeeaff3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Ships.ShipMovement
-  maxSpeed: 10
-  throttleRate: 5
-  acceleration: 3
-  braking: 5
-  turnSpeed: 60
---- !u!114 &9111669334125293663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3628663861168553780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b78f685ce363a54aa2758f968c40aab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Ships.ShipPlayerInput
+  m_Constraints: 80
+  m_CollisionDetection: 2
 --- !u!65 &4705141275533751484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -114,6 +85,48 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7395029471836222343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3628663861168553780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a3a083f3bd1bb4b9587b59f6618a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameWork.Framework.Ships.Movement.ShipMovementInput
+  movementAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &1289158629151891081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3628663861168553780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe13b17054d50545850d72aa781d5fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameWork.Framework.Ships.Movement.ShipMovementController
+  movementStats: {fileID: 11400000, guid: ac49967315d3f6c478cde24ea1644c4c, type: 2}
+  cargoStats: {fileID: 11400000, guid: ea52d492e54b42641a442d68b73081fb, type: 2}
+  state:
+    requestedTargetSpeed: 0
+    allowedTargetSpeed: 0
+    currentPropulsionSpeed: 0
+    effectiveMaxSpeed: 0
+    effectiveAcceleration: 0
+    currentTurnEfficiency: 0
+    externalVelocity: {x: 0, y: 0, z: 0}
+    finalVelocity: {x: 0, y: 0, z: 0}
+    driveState: 0
+    reverseArmed: 0
+  currentCargoWeight: 0
+  speedCondition: 1
+  accelerationCondition: 1
+  steeringCondition: 1
 --- !u!1 &6756908811502666311
 GameObject:
   m_ObjectHideFlags: 0

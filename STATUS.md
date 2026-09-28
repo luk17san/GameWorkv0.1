@@ -147,3 +147,21 @@ Dodano pierwszą warstwę danych systemu ruchu:
 3. Sprawdzić Console pod kątem błędów kompilacji.
 4. Utworzyć zasoby `ShipMovementStats` i `ShipCargoStats` w Inspectorze.
 5. Dodać komponenty do prostego obiektu testowego i sprawdzić W/S/A/D, utrzymywanie prędkości, obrót na postoju oraz cofanie.
+
+## Poprawka drzenia statku — 2026-09-27
+
+- Po usunieciu duplikatow komponentow uzytkownik nadal zglaszal drzenie. Zapisana scena dziedziczy jedna pare komponentow z PlayerShip.prefab; Rigidbody jest dynamiczne i ma wlaczona interpolacje.
+- ShipMovementController: dynamiczne Rigidbody porusza sie przez linearVelocity zamiast MovePosition. Skret i kierunek predkosci korzystaja ze wspolnej rotacji Rigidbody, zamiast pobierania transform.forward z wygladzanego obrazu. Wyzerowano pozostala predkosc katowa przed kontrolowanym skretem, jak w poprzednim sterowaniu. Dla kinematycznego Rigidbody pozostawiono MovePosition.
+- Parametry ladunku, przyspieszania, hamowania i cofania pozostaly bez zmian. Nie zmieniono sceny, prefabu ani kamery.
+- Asystent: kontrolna kompilacja poprawionego kontrolera z pozostalymi skryptami ruchu i bibliotekami projektu przeszla bez bledow; trzy ostrzezenia CS0649 dotycza pol przypisywanych w Inspectorze.
+- Ograniczenie: nie uruchomiono edytora ani Play Mode. Zmiana usuwa podejrzana niezgodnosc sposobu poruszania z typem Rigidbody; nie potwierdzono jeszcze ustapienia drzenia.
+- Nastepny krok: test plyniecia prosto, skretow, hamowania i cofania w ShipSandbox po ponownej kompilacji Unity. Jesli drzenie pozostanie, porownac widok nieruchomej kamery z TopDownCamera i sprawdzic czasy klatek.
+
+## Zoom kamery TopDown — 2026-09-27
+
+- Zmieniono Assets/ThePirate/Scripts/Camera/TopDownCamera.cs: kółko myszy przybliża i oddala płynnie przez Input System. Tryb jest odczytywany z Camera.orthographic: Orthographic zmienia rozmiar, Perspective odległość wzdłuż kierunku offsetu, przy stałym kącie patrzenia i FOV.
+- Zachowano śledzenie w LateUpdate. Wygładzanie pozycji celu jest oddzielone od wygładzania zoomu. Kierunek kamery nadal nie zależy od obrotu statku. Brak myszy lub celu jest obsługiwany bez błędu. Nie zmieniano scen, prefabów ani plików .meta.
+- Inspector / TopDownCamera: Zoom Speed = 2 jednostki na krok, Zoom Smooth Time = 0.15 s; Min/Max Orthographic Size = 5/40; Min/Max Perspective Distance = 8/80. Smooth Time nadal odpowiada za śledzenie. Start: Camera Size w Orthographic, długość Offset w Perspective, ograniczone do ustawionych limitów. Projection wybiera się w komponencie Camera; przełączenie trybu korzysta z osobno zapamiętanego zoomu danego trybu i nie gwarantuje identycznego kadru.
+- Asystent: kontrolna kompilacja skryptu Roslyn z bibliotekami Unity 6000.6.3f1 i Input System projektu zakończona bez błędów. Jedno ostrzeżenie CS0649 dotyczy pola Target przypisywanego w Inspectorze. To sprawdzenie kodu, nie test edytora.
+- Nie uruchomiono Unity ani Play Mode. Następny krok: w ShipSandbox przetestować kółko w obie strony i dojście do obu limitów w Orthographic oraz Perspective; podczas zoomu płynąć prosto i skręcać, sprawdzić śledzenie, stały kąt i Console. Sprawdzić również zmianę Projection oraz ponowne włączenie komponentu. Minimalną odległość dopasować do wielkości statku i Near Clipping Plane, jeśli model jest obcinany.
+- Zmiany lokalne, bez commit i push. Zachowano istniejące zmiany użytkownika; wpis dopisano do STATUS.md.

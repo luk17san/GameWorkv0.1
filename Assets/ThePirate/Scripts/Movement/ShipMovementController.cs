@@ -65,8 +65,8 @@ namespace GameWork.Framework.Ships.Movement
             CalculateEffectiveStats();
             ClampAllowedTargetSpeed();
             UpdateCurrentSpeed();
-            ApplyMovement();
-            ApplySteering();
+            Quaternion rotation = ApplySteering();
+            ApplyMovement(rotation);
         }
 
         public void SetCargoWeight(float weight)
@@ -252,17 +252,24 @@ namespace GameWork.Framework.Ships.Movement
             }
         }
 
-        private void ApplyMovement()
+        private void ApplyMovement(Quaternion rotation)
         {
-            Vector3 propulsionVelocity = transform.forward * state.CurrentPropulsionSpeed;
+            Vector3 propulsionVelocity = rotation * Vector3.forward * state.CurrentPropulsionSpeed;
             Vector3 finalVelocity = propulsionVelocity + state.ExternalVelocity;
             state.SetFinalVelocity(finalVelocity);
 
-            Vector3 nextPosition = shipRigidbody.position + finalVelocity * Time.fixedDeltaTime;
-            shipRigidbody.MovePosition(nextPosition);
+            if (shipRigidbody.isKinematic)
+            {
+                shipRigidbody.MovePosition(shipRigidbody.position + finalVelocity * Time.fixedDeltaTime);
+            }
+            else
+            {
+                // Dynamiczne Rigidbody przesuwa fizyka, zachowujac interpolacje obrazu.
+                shipRigidbody.linearVelocity = finalVelocity;
+            }
         }
 
-        private void ApplySteering()
+        private Quaternion ApplySteering()
         {
             float normalizedSpeed = state.EffectiveMaxSpeed <= StopEpsilon
                 ? 0f
@@ -277,7 +284,13 @@ namespace GameWork.Framework.Ships.Movement
                                 Time.fixedDeltaTime;
 
             Quaternion turnRotation = Quaternion.Euler(0f, turnDegrees, 0f);
-            shipRigidbody.MoveRotation(shipRigidbody.rotation * turnRotation);
+            Quaternion rotation = shipRigidbody.rotation * turnRotation;
+            if (!shipRigidbody.isKinematic)
+            {
+                shipRigidbody.angularVelocity = Vector3.zero;
+            }
+            shipRigidbody.MoveRotation(rotation);
+            return rotation;
         }
 
         private void OnValidate()

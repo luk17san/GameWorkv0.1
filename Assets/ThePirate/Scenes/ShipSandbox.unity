@@ -165,6 +165,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 44968429}
     m_Modifications:
     - target: {fileID: 1507636620937791777, guid: 7097ba7ba649e1f41bba232312bdcbd8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507636620937791777, guid: 7097ba7ba649e1f41bba232312bdcbd8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507636620937791777, guid: 7097ba7ba649e1f41bba232312bdcbd8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -558,6 +566,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerShip
       objectReference: {fileID: 0}
+    - target: {fileID: 3628663861168553780, guid: e24869b7da3237f4fb44e0e36ef5eb5b, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5592865605517446517, guid: e24869b7da3237f4fb44e0e36ef5eb5b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -611,10 +623,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 41708420710791076, guid: 97ab562c38ea5e44eb9d1ca0e7ea8eb6, type: 3}
-      propertyPath: orthographic size
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 4382270437932967095, guid: 97ab562c38ea5e44eb9d1ca0e7ea8eb6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
