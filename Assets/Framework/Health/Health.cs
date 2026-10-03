@@ -15,6 +15,7 @@ namespace Framework.Health
         // Argumenty: aktualne i maksymalne zdrowie.
         public event Action<int, int> Changed;
         public event Action Depleted;
+        public event Action<int> Damaged;
 
         private void Awake()
         {
@@ -28,12 +29,24 @@ namespace Framework.Health
             if (amount <= 0 || IsDepleted)
                 return;
 
+            int previous = CurrentHealth;
             CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
             bool depletedNow = IsDepleted;
+            Damaged?.Invoke(previous - CurrentHealth);
 
             Changed?.Invoke(CurrentHealth, MaxHealth);
             if (depletedNow)
                 Depleted?.Invoke();
+        }
+
+        public void RestoreCurrentHealth(int value)
+        {
+            int restored = Mathf.Clamp(value, 0, MaxHealth);
+            if (restored == CurrentHealth) return;
+            bool depletedNow = CurrentHealth > 0 && restored == 0;
+            CurrentHealth = restored;
+            Changed?.Invoke(CurrentHealth, MaxHealth);
+            if (depletedNow) Depleted?.Invoke();
         }
     }
 }

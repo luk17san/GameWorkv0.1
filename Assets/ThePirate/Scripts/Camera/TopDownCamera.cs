@@ -64,6 +64,9 @@ namespace ThePirate.Cameras
 
         private void Update()
         {
+            if (Framework.Menu.PauseService.GameplayInputBlocked)
+                return;
+
             if (target == null || Mouse.current == null)
                 return;
 
@@ -84,6 +87,9 @@ namespace ThePirate.Cameras
 
         private void LateUpdate()
         {
+            if (Framework.Menu.PauseService.GameplayInputBlocked)
+                return;
+
             if (target == null)
             {
                 hasFollowPosition = false;

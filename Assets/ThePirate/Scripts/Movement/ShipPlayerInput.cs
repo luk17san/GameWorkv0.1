@@ -18,7 +18,7 @@ namespace ThePirate.Ships
         private void Update()
         {
             Keyboard keyboard = Keyboard.current;
-            if (keyboard == null || !Application.isFocused)
+            if (keyboard == null || Framework.Menu.PauseService.GameplayInputBlocked)
             {
                 movement.SetInput(0f, 0f);
                 return;

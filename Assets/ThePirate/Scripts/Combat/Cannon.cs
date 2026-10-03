@@ -2,47 +2,34 @@ using UnityEngine;
 
 namespace ThePirate.Combat
 {
+    // Emiter nie ma własnego przeładowania ani parametrów obrażeń.
     [DisallowMultipleComponent]
     public sealed class Cannon : MonoBehaviour
     {
-        [Header("References")]
-        [Tooltip("Główny obiekt statku. Pocisk ignoruje collidery w jego hierarchii.")]
         [SerializeField] private Transform owner;
         [SerializeField] private Transform firePoint;
         [SerializeField] private CannonProjectile projectilePrefab;
-
-        [Header("Shot")]
-        [SerializeField, Min(1)] private int damage = 25;
-        [SerializeField, Min(0.1f)] private float projectileSpeed = 20f;
-        [SerializeField, Min(0.1f)] private float projectileLifetime = 5f;
-        [SerializeField, Min(0.1f)] private float reloadTime = 1.5f;
-
-        private float nextShotTime;
-
-        public float ReloadRemaining => Mathf.Max(0f, nextShotTime - Time.time);
-
-        public bool TryFire()
+        public Transform Muzzle => firePoint != null ? firePoint : transform;
+        public float ProjectileRadius
         {
-            if (!isActiveAndEnabled || Time.timeScale <= 0f || ReloadRemaining > 0f)
-                return false;
-
-            if (owner == null || firePoint == null || projectilePrefab == null)
+            get
             {
-                Debug.LogWarning("Cannon: przypisz Owner, Fire Point i Projectile Prefab.", this);
-                return false;
+                if (projectilePrefab == null) return 0.15f;
+                var sphere = projectilePrefab.GetComponent<SphereCollider>();
+                Vector3 scale = projectilePrefab.transform.lossyScale;
+                return sphere == null ? 0.15f : sphere.radius * Mathf.Max(Mathf.Abs(scale.x), Mathf.Abs(scale.y), Mathf.Abs(scale.z));
             }
-
-            if (!projectilePrefab.gameObject.activeSelf || !projectilePrefab.enabled)
-            {
-                Debug.LogWarning("Cannon: prefab pocisku i jego komponent muszą być aktywne.", this);
-                return false;
-            }
-
-            CannonProjectile projectile = Instantiate(projectilePrefab,
-                firePoint.position, firePoint.rotation);
-            projectile.Launch(owner, Mathf.Max(1, damage),
-                Mathf.Max(0.1f, projectileSpeed), Mathf.Max(0.1f, projectileLifetime));
-            nextShotTime = Time.time + Mathf.Max(0.1f, reloadTime);
+        }
+        public bool Ready => isActiveAndEnabled && owner != null && projectilePrefab != null && projectilePrefab.enabled && projectilePrefab.gameObject.activeSelf;
+        public void Configure(Transform ship, CannonProjectile prefab) { owner = ship; projectilePrefab = prefab; firePoint = transform; }
+        public bool Emit(Vector3 direction, int damage, float speed, float lifetime, AmmunitionKind ammunition, bool gravity = false, float radius = 0f)
+        {
+            if (!Ready || direction.sqrMagnitude < 0.001f) return false;
+            var ship = owner.GetComponent<CombatShip>();
+            if (ship != null && !ship.WeaponsAllowed) return false;
+            var projectile = Instantiate(projectilePrefab, Muzzle.position, Quaternion.LookRotation(direction));
+            projectile.Launch(owner, damage, speed, lifetime, ammunition, gravity, radius);
+            if (ship != null) ship.RecordCombat();
             return true;
         }
     }

@@ -11,7 +11,8 @@ namespace GameWork.Framework.Ships.Movement
 
         public Vector2 ReadMovement()
         {
-            return movementAction == null || movementAction.action == null
+            return global::Framework.Menu.PauseService.GameplayInputBlocked
+                || !isActiveAndEnabled || movementAction == null || movementAction.action == null
                 ? Vector2.zero
                 : Vector2.ClampMagnitude(movementAction.action.ReadValue<Vector2>(), 1f);
         }

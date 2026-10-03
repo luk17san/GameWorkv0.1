@@ -28,3 +28,9 @@ Projekt używa URP i Input System. Wersje pakietów zapisuje [manifest](Packages
 Przed kolejnym zadaniem czytamy PLAN.md, STATUS.md oraz opis odpowiednich komponentów w ARCHITECTURE.md. Po pracy aktualizujemy status: co wykonano, jak sprawdzono wynik, czego jeszcze nie potwierdzono i jaki jest następny krok. Zmiana zachowania lub zależności wymaga także aktualizacji architektury i instrukcji konfiguracji, jeśli ich dotyczy.
 
 Dokumentacja jest częścią repozytorium. Zapis lokalny zachowuje ją na tym komputerze; dostęp z innego urządzenia wymaga osobnego commit i push. Sama rozmowa nie synchronizuje plików. Każdy etap kończy się weryfikacją — obecność kodu nie oznacza zaliczonego testu w Unity.
+
+## Menu gry
+
+Podstawowe menu i konfigurację opisuje [SETUP_MENU.md](SETUP_MENU.md).
+
+Instrukcja jednego slotu zapisu: [SETUP_SAVE.md](SETUP_SAVE.md).

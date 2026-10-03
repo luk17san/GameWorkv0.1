@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/ThePirate/Scenes/MainMenu.unity
+    guid: db32ec1a3ef152c4293578b4d1c5b02a
+  - enabled: 1
+    path: Assets/ThePirate/Scenes/ShipSandbox.unity
+    guid: 29e4ae2f23f1b9b438b9873a51fb3d20
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:

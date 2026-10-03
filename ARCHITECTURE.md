@@ -76,3 +76,34 @@ Konfiguracja, ograniczenia inicjalizacji i test: [SETUP_HEALTH.md](SETUP_HEALTH.
 Domyślnie: 25 obrażeń, prędkość 20, czas życia 5 sekund, przeładowanie 1.5 sekundy. Kierunek zależy od FirePoint, nie od kursora. Jedno kliknięcie to jedna próba strzału; kliknięcia podczas przeładowania nie są kolejkowane. Brak automatycznego ognia przy przytrzymaniu. Nie ma jeszcze celowania, wyboru burty i obsługi kliknięć nad UI.
 
 Skrypty broni są w ThePirate i korzystają z uniwersalnego Health. Nie dodajemy jeszcze interfejsów broni, konfiguracji ScriptableObject ani systemu ponownego używania pocisków. Konfigurację i testy fizyki opisuje [SETUP_CANNON.md](SETUP_CANNON.md).
+
+## Podstawowe menu i przepływ gry
+
+`Assets/Framework/Menu` zawiera `PauseService` (czas, dźwięk, kursor i blokada wejścia), `GameFlow` (ładowanie scen/wyjście), `MainMenuView` i `PauseMenuView` (obsługa przycisków i Esc). Framework nie odwołuje się do ThePirate.
+
+`PirateMenuBootstrap` zna ścieżki scen i ładuje prefab menu pauzy tylko w `ShipSandbox`. `MenuSetupBuilder` tworzy scenę menu, prefab uGUI, powiązania przycisków i listę scen z menu na pierwszej pozycji. Nie modyfikuje zapisanej sceny statku. Odrębne elementy Canvas można edytować w Inspectorze.
+
+Dotychczasowe źródła wejścia (`ShipPlayerInput`, `ShipMovementInput`, `ShipMovementController`, `CannonPlayerInput`, `TopDownCamera`) pytają `PauseService.GameplayInputBlocked`. Dzięki temu pauza, utrata fokusu oraz klatka po wznowieniu nie wywołują poleceń gry. Samo zatrzymanie `Time.timeScale` nie wystarcza do zablokowania `Update`.
+
+Nie ma jeszcze serializacji stanu ani ustawień. `NewGame` ładuje świeżą scenę i nie korzysta z pliku zapisu. Powrót do menu i wyjście potwierdzają utratę bieżącego postępu.
+
+## Zapis i wczytywanie — jeden slot
+
+`Framework.Save.SingleSlotSaveStore` zapisuje i odczytuje JSON w `Application.persistentDataPath`, używając pliku tymczasowego oraz kopii zapasowej. Przy odczycie walidacja odrzuca dane niezgodne z aktualnym formatem. Framework nie zna statków.
+
+`ThePirate.Save.VoyageSaveRuntime` zbiera stan gracza (`CombatShip` drużyny 1) oraz opcjonalnego przeciwnika (drużyna 2), jeśli jest obecny w scenie. Waliduje plik i mapuje dane na komponenty po ponownym otwarciu `ShipSandbox`. Przed zastosowaniem sprawdza liczbę statków oraz ścieżki modułów i baterii, by nie przywracać częściowego stanu. Ścieżki zawierają nazwy i indeksy dzieci; po zmianie struktury prefabów starszy zapis może wymagać migracji.
+
+`SaveMenuActions` obsługuje przyciski w istniejącej scenie i prefabie, a `SaveMenuSetupBuilder` dodaje je w edytorze bez przebudowy menu od początku. `GameFlow` udostępnia ładowanie sceny rozgrywki dla wczytania. Komponenty zdrowia, ruchu i uzbrojenia udostępniają ograniczone metody przywracania stanu. Dane pojedynczych pocisków nie są serializowane.
+
+## Warstwa danych HUD
+
+`ThePirate.UI.HUD` w `Assets/ThePirate/UI/HUD/Runtime` zależy od istniejącego zdrowia,
+ruchu i walki. Framework nie zależy od HUD. `ShipHudAdapter` odczytuje systemy statku,
+`PlayerHudController` odświeża co 0.1 s, a `PlayerHudStateStore` udostępnia niezmienne
+snapshoty i oddzielne zdarzenia zmian. Widoki będą subskrybowały magazyn, bez znajomości walki.
+`PlayerHudBootstrap` podłącza gracza drużyny 1 w ShipSandbox podczas uruchomienia sceny.
+Wytrzymałość HUD pochodzi tylko z Health, przeładowanie jest osobne dla każdego WeaponBattery.
+Nie dodano Canvas ani nowego systemu wiatru/questów/wyboru celu. Szczegóły: SETUP_HUD.md.
+
+## Widok HUD uGUI
+PlayerHudView subskrybuje magazyn HUD. Dziewięć prefabów sekcji jest zagnieżdżonych w Resources/GameWork/PlayerHud. Osobne Text, Image i HudShapeGraphic umożliwiają edycję. HudMinimapView tworzy lokalną kamerę i RenderTexture tylko na czas działania widoku. UI nie blokuje kliknięć. Szczegóły: SETUP_HUD_UI.md.

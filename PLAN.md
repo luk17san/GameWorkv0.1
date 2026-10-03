@@ -51,3 +51,11 @@ Nie dodajemy abstrakcji ani pustych menedżerów na zapas. Uniwersalne elementy 
 5. Po poprawnym teście połącz zmiany i uzupełnij status.
 
 Rozmowa nie synchronizuje lokalnych plików. Repozytorium i STATUS.md są źródłem informacji o postępie. Zadanie zakończone przez AI może nadal oczekiwać na sprawdzenie w Unity.
+
+## Równoległy etap: podstawowe menu
+
+Menu główne, nowa gra, pauza i wyjście są przygotowane jako osobny etap infrastruktury gry. Ich test w Unity opisuje SETUP_MENU.md. Po potwierdzeniu działania można kolejno dodać zapis/wczytywanie i ustawienia.
+
+## Zapis i wczytywanie
+
+Po podstawowym menu dodano jeden slot zapisu bieżącej sceny. Test działania i ograniczenia opisuje SETUP_SAVE.md; ustawienia gry pozostają następnym osobnym etapem.

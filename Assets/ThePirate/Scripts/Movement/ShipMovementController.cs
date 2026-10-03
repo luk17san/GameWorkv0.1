@@ -22,12 +22,55 @@ namespace GameWork.Framework.Ships.Movement
         [SerializeField, Range(0f, 1f)] private float accelerationCondition = 1f;
         [SerializeField, Range(0f, 1f)] private float steeringCondition = 1f;
 
+        private readonly System.Collections.Generic.List<Vector3> contactNormals = new System.Collections.Generic.List<Vector3>();
         private Rigidbody shipRigidbody;
         private ShipMovementInput movementInput;
         private float steeringInput;
         private bool brakeWasHeld;
+        private bool moored;
+        public void SetMoored(bool value) { moored = value; steeringInput = 0f; brakeWasHeld = false; }
+        [SerializeField] private bool externalControl;
+        private float navigationSpeed;
+        private float navigationSteering;
+        private float lastNavigationCommand = float.NegativeInfinity;
+
+        public bool ExternalControl => externalControl;
+        public bool HasMovementConfiguration => movementStats != null;
+        public float BrakingDeceleration => movementStats == null ? 0f :
+            movementStats.Acceleration * accelerationCondition *
+            (cargoStats == null ? 1f : cargoStats.GetAccelerationMultiplier(currentCargoWeight)) *
+            movementStats.BrakingMultiplier;
+
+        // External commands use the same acceleration, cargo and damage rules as player input.
+        public void SetNavigationCommand(float speed, float steering)
+        {
+            if (!externalControl) return;
+            navigationSpeed = float.IsNaN(speed) || float.IsInfinity(speed) ? 0f : Mathf.Max(0f, speed);
+            navigationSteering = float.IsNaN(steering) || float.IsInfinity(steering) ? 0f : Mathf.Clamp(steering, -1f, 1f);
+            lastNavigationCommand = Time.time;
+        }
 
         public ShipMovementState State => state;
+        public float CurrentCargoWeight => currentCargoWeight;
+        public bool HasCargoCapacity => cargoStats != null;
+        public float CargoCapacity => cargoStats != null ? cargoStats.CargoCapacity : 0f;
+
+        public void RestoreMotion(float requestedSpeed, float currentSpeed, bool reverseArmed, Vector3 externalVelocity)
+        {
+            contactNormals.Clear();
+            state.SetRequestedTargetSpeed(requestedSpeed);
+            state.SetCurrentPropulsionSpeed(currentSpeed);
+            state.SetReverseArmed(reverseArmed);
+            state.SetExternalVelocity(externalVelocity);
+            state.SetFinalVelocity(shipRigidbody.rotation * Vector3.forward * currentSpeed + externalVelocity);
+            steeringInput = 0f;
+            brakeWasHeld = false;
+            if (!shipRigidbody.isKinematic)
+            {
+                shipRigidbody.linearVelocity = state.FinalVelocity;
+                shipRigidbody.angularVelocity = Vector3.zero;
+            }
+        }
 
         private void Awake()
         {
@@ -38,11 +81,20 @@ namespace GameWork.Framework.Ships.Movement
 
         private void Update()
         {
+            if (moored || global::Framework.Menu.PauseService.GameplayInputBlocked)
+            {
+                steeringInput = 0f;
+                brakeWasHeld = false;
+                return;
+            }
+
             if (movementStats == null)
             {
                 steeringInput = 0f;
                 return;
             }
+
+            if (externalControl) return;
 
             Vector2 input = movementInput.ReadMovement();
             steeringInput = Mathf.Abs(input.x) >= InputDeadZone ? input.x : 0f;
@@ -62,11 +114,22 @@ namespace GameWork.Framework.Ships.Movement
                 return;
             }
 
+            if (moored) { RestoreMotion(0f, 0f, false, Vector3.zero); return; }
+            SynchronizeCollisionSpeed();
             CalculateEffectiveStats();
+            if (externalControl)
+            {
+                bool fresh = Time.time - lastNavigationCommand <= 0.25f &&
+                    !global::Framework.Menu.PauseService.GameplayInputBlocked;
+                state.SetRequestedTargetSpeed(fresh ? navigationSpeed : 0f);
+                state.SetReverseArmed(false);
+                steeringInput = fresh ? navigationSteering : 0f;
+            }
             ClampAllowedTargetSpeed();
             UpdateCurrentSpeed();
             Quaternion rotation = ApplySteering();
             ApplyMovement(rotation);
+            contactNormals.Clear();
         }
 
         public void SetCargoWeight(float weight)
@@ -256,6 +319,12 @@ namespace GameWork.Framework.Ships.Movement
         {
             Vector3 propulsionVelocity = rotation * Vector3.forward * state.CurrentPropulsionSpeed;
             Vector3 finalVelocity = propulsionVelocity + state.ExternalVelocity;
+            // Contacts describe the preceding physics step. Remove propulsion into the surface.
+            foreach (Vector3 normal in contactNormals)
+            {
+                float inwardSpeed = Vector3.Dot(finalVelocity, normal);
+                if (inwardSpeed < 0f) finalVelocity -= normal * inwardSpeed;
+            }
             state.SetFinalVelocity(finalVelocity);
 
             if (shipRigidbody.isKinematic)
@@ -292,6 +361,40 @@ namespace GameWork.Framework.Ships.Movement
             shipRigidbody.MoveRotation(rotation);
             return rotation;
         }
+
+        private void OnCollisionEnter(Collision collision) => RecordCollision(collision);
+        private void OnCollisionStay(Collision collision) => RecordCollision(collision);
+
+        private void RecordCollision(Collision collision)
+        {
+            if (movementStats == null || shipRigidbody.isKinematic || collision.collider.GetComponentInParent<ThePirate.Combat.CannonProjectile>() != null) return;
+            var health = collision.collider.GetComponentInParent<global::Framework.Health.Health>();
+            if (health != null && health.IsDepleted) return;
+            for (int i = 0; i < collision.contactCount; i++)
+            {
+                Vector3 normal = collision.GetContact(i).normal;
+                normal.y = 0f;
+                if (normal.sqrMagnitude > 0.01f) contactNormals.Add(normal.normalized);
+            }
+        }
+
+        private void SynchronizeCollisionSpeed()
+        {
+            if (contactNormals.Count == 0 || shipRigidbody.isKinematic) return;
+            float previous = state.CurrentPropulsionSpeed;
+            float actual = Vector3.Dot(shipRigidbody.linearVelocity - state.ExternalVelocity, shipRigidbody.rotation * Vector3.forward);
+            // A shove or bounce is not extra engine speed or an automatic reverse command.
+            float retained = previous >= 0f ? Mathf.Clamp(actual, 0f, previous) : Mathf.Clamp(actual, previous, 0f);
+            state.SetCurrentPropulsionSpeed(retained);
+            if (!externalControl)
+            {
+                float requested = state.RequestedTargetSpeed;
+                if (requested * previous > 0f && Mathf.Abs(requested) > Mathf.Abs(retained))
+                    state.SetRequestedTargetSpeed(retained);
+            }
+        }
+
+        private void OnDisable() => contactNormals.Clear();
 
         private void OnValidate()
         {
