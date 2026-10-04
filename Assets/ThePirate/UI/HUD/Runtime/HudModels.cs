@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ThePirate.UI.HUD
 {
-    public enum HudBatterySide { Left, Right, Bow, Stern }
+    public enum HudBatterySide { Left, Right, Bow, Stern, Special }
     public enum HudDriveMode { Unavailable, Stopped, Forward, Braking, Reverse }
     public enum HudMarkerKind { Player, Friendly, Enemy, Neutral }
     public enum HudMessageKind { Info, Warning, Error }

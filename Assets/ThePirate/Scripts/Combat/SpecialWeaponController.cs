@@ -7,11 +7,14 @@ namespace ThePirate.Combat
     {
         [SerializeField] private Cannon mortar;
         [SerializeField] private ShipDamageModule condition;
-        [SerializeField, Min(1)] private float minimumRange = 15f;
+        [SerializeField, Min(1)] private float minimumRange = 20f;
         [SerializeField, Min(1)] private float maximumRange = 100f;
         [SerializeField, Min(0.1f)] private float flightTime = 3f;
-        [SerializeField, Min(0.1f)] private float reloadTime = 12f;
-        [SerializeField, Min(1)] private int damage = 50;
+        [SerializeField, Min(0.1f)] private float reloadTime = 15f;
+        [SerializeField, Min(1)] private int damage = 100;
+        [SerializeField, Min(1f)] private float minimumArcHeight = 25f;
+        [SerializeField] private bool damageAllies;
+        [SerializeField] private bool damageOwner;
         [SerializeField, Min(0.1f)] private float blastRadius = 6f;
         private CombatShip ship;
         private Vector3 target;
@@ -21,6 +24,10 @@ namespace ThePirate.Combat
         public Vector3 Target => target;
         public float Radius => blastRadius;
         public float ReloadRemaining => Mathf.Max(0f, nextFire - Time.time);
+        public float ReloadDuration => Mathf.Max(0.1f, reloadTime);
+        public bool Destroyed => condition != null && condition.Destroyed;
+        public bool Ready => isActiveAndEnabled && mortar != null && mortar.Ready && ship != null
+            && ship.WeaponsAllowed && !Destroyed && ReloadRemaining <= 0f;
         public void RestoreReload(float seconds)
         {
             Cancel();
@@ -37,9 +44,11 @@ namespace ThePirate.Combat
         public bool TryFire()
         {
             if (!Aiming || !ValidTarget || Time.timeScale <= 0) return false;
-            float duration = Mathf.Max(0.1f, flightTime);
+            if (Physics.gravity.y >= -0.01f) return false;
+            // Dłuższy lot zapewnia wysoki łuk także przy większym zasięgu.
+            float duration = Mathf.Max(Mathf.Max(0.1f, flightTime), Mathf.Sqrt(8f * minimumArcHeight / -Physics.gravity.y));
             Vector3 velocity = (target - mortar.Muzzle.position - 0.5f * Physics.gravity * duration * duration) / duration;
-            if (!mortar.Emit(velocity.normalized, damage, velocity.magnitude, duration + 5f, AmmunitionKind.Mortar, true, blastRadius)) return false;
+            if (!mortar.Emit(velocity.normalized, damage, velocity.magnitude, duration + 5f, AmmunitionKind.Mortar, true, blastRadius, damageAllies, damageOwner, target.y)) return false;
             nextFire = Time.time + reloadTime; Cancel(); return true;
         }
     }

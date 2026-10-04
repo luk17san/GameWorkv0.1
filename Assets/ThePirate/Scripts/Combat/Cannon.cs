@@ -22,13 +22,14 @@ namespace ThePirate.Combat
         }
         public bool Ready => isActiveAndEnabled && owner != null && projectilePrefab != null && projectilePrefab.enabled && projectilePrefab.gameObject.activeSelf;
         public void Configure(Transform ship, CannonProjectile prefab) { owner = ship; projectilePrefab = prefab; firePoint = transform; }
-        public bool Emit(Vector3 direction, int damage, float speed, float lifetime, AmmunitionKind ammunition, bool gravity = false, float radius = 0f)
+        public bool Emit(Vector3 direction, int damage, float speed, float lifetime, AmmunitionKind ammunition, bool gravity = false, float radius = 0f,
+            bool damageAllies = false, bool damageOwner = false, float waterHeight = 0f)
         {
             if (!Ready || direction.sqrMagnitude < 0.001f) return false;
             var ship = owner.GetComponent<CombatShip>();
             if (ship != null && !ship.WeaponsAllowed) return false;
             var projectile = Instantiate(projectilePrefab, Muzzle.position, Quaternion.LookRotation(direction));
-            projectile.Launch(owner, damage, speed, lifetime, ammunition, gravity, radius);
+            projectile.Launch(owner, damage, speed, lifetime, ammunition, gravity, radius, damageAllies, damageOwner, waterHeight);
             if (ship != null) ship.RecordCombat();
             return true;
         }

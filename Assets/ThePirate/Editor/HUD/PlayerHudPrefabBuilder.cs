@@ -97,7 +97,9 @@ namespace ThePirate.Editor.HUD
                 Poly(reload,"Keel",Vector2.zero,new Vector2(98,200),new Color(Gold.r,Gold.g,Gold.b,.6f),false,new Vector2(.5f,.05f),new Vector2(.5f,.95f));
                 for(int i=0;i<6;i++) Poly(reload,"DeckLine_"+i,new Vector2(0,-65+i*26),new Vector2(54,1),new Color(Gold.r,Gold.g,Gold.b,.4f),false,Vector2.zero,Vector2.right);
                 view.batteries=new [] { Mount(reload,"Bow",HudBatterySide.Bow,new Vector2(0,64)),Mount(reload,"Left",HudBatterySide.Left,new Vector2(-37,0)),
-                    Mount(reload,"Right",HudBatterySide.Right,new Vector2(37,0)),Mount(reload,"Stern",HudBatterySide.Stern,new Vector2(0,-70)) };
+                    Mount(reload,"Right",HudBatterySide.Right,new Vector2(37,0)),Mount(reload,"Stern",HudBatterySide.Stern,new Vector2(0,-70)),
+                    SpecialMount(reload) };
+                Label(reload,"SpecialLabel","MOŹDZIERZ",new Vector2(0,-32),new Vector2(90,20),10);
 
                 var map=Group(safe,"Minimap",Vector2.one,new Vector2(-120,-119),new Vector2(204,204));
                 view.minimap=map.gameObject.AddComponent<HudMinimapView>();
@@ -215,6 +217,15 @@ namespace ThePirate.Editor.HUD
             fill=Shape(root,"Fill",Vector2.zero,size-new Vector2(2,2),HudShapeGraphic.ShapeKind.Rectangle,Teal);
             Shape(root,"Outline",Vector2.zero,size,HudShapeGraphic.ShapeKind.Border,new Color(Gold.r,Gold.g,Gold.b,.7f),.8f);
         }
+        private static HudBatteryWidget SpecialMount(Transform parent)
+        {
+            var widget=Mount(parent,"Special",HudBatterySide.Special,Vector2.zero);
+            foreach(var rect in widget.GetComponentsInChildren<RectTransform>(true)) rect.sizeDelta*=0.55f;
+            foreach(var graphic in widget.GetComponentsInChildren<HudShapeGraphic>(true)) graphic.thickness*=0.7f;
+            widget.countdown.fontSize=8;
+            widget.countdown.rectTransform.sizeDelta=new Vector2(28,18);
+            return widget;
+        }
         private static HudBatteryWidget Mount(Transform parent,string name,HudBatterySide side,Vector2 position)
         {
             var root=Rect(parent,name,position,new Vector2(47,47));
@@ -246,11 +257,11 @@ namespace ThePirate.Editor.HUD
                 if(graphic.raycastTarget) throw new InvalidOperationException("HUD blokuje kliknięcia: "+graphic.name);
             }
             var view=root.GetComponent<PlayerHudView>();
-            if(view.avatar.sprite==null || view.batteries.Length!=4 || view.minimap.markerTemplate==null || view.durabilityFill==null)
+            if(view.avatar.sprite==null || view.batteries.Length!=5 || view.minimap.markerTemplate==null || view.durabilityFill==null)
                 throw new InvalidOperationException("Brak referencji HUD.");
             if(root.GetComponent<CanvasGroup>().blocksRaycasts) throw new InvalidOperationException("HUD blokuje wejście.");
             if(root.GetComponentsInChildren<Canvas>(true).Length!=1) throw new InvalidOperationException("Oczekiwano jednego Canvas.");
-            File.WriteAllText("Temp/GameWorkHudUI.validation.txt","Validated: "+objects+" editable objects; 4 mounts; no missing scripts; all graphics pass pointer input; sprites assigned.\n");
+            File.WriteAllText("Temp/GameWorkHudUI.validation.txt","Validated: "+objects+" editable objects; 5 mounts including special weapon; no missing scripts; all graphics pass pointer input; sprites assigned.\n");
         }
 
         [MenuItem("GameWork/HUD/Zapisz podgląd")]

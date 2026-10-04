@@ -10,6 +10,7 @@ namespace ThePirate.Combat
         public WeaponBattery[] Batteries { get; private set; }
         public Vector3 AimPoint { get; private set; }
         public bool HasAim { get; private set; }
+        public float WaterHeight => waterHeight;
         public WeaponBattery Selected { get; private set; }
         private void Awake() => Batteries = GetComponentsInChildren<WeaponBattery>();
         public void Aim(Vector2 screenPoint)

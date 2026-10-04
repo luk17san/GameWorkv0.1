@@ -125,6 +125,7 @@ MonoBehaviour:
   - {fileID: 2044434153196160694}
   - {fileID: 1514145409675095882}
   - {fileID: 8031753228301381138}
+  - {fileID: 8000000000100}
   minimap: {fileID: 1701702696775682813}
   windValue: {fileID: 5056184014117500576}
   windArrow: {fileID: 118069012288104278}
@@ -1335,3 +1336,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+--- !u!114 &8000000000100 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8000000000009, guid: c62aa9a57b771544abebe4e68a999d11, type: 3}
+  m_PrefabInstance: {fileID: 2354818249831443735}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d491d015274720f428038ee38bf3ba10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.UI.HUD.HudBatteryWidget

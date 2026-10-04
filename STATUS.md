@@ -307,3 +307,37 @@ Dodano pierwszą warstwę danych systemu ruchu:
 - VoyageSaveData/VoyageSaveRuntime zapisują port ID, zacumowanie i pozostałą blokadę walki. Nowe opcjonalne pola nie zmieniają wersji v1 i umożliwiają odczyt starszych zapisów. Mapowanie portu i zgodność jego położenia są sprawdzane przed modyfikacją statków; brak/duplikat portu powoduje odmowę. Stan zacumowania odtwarzany po ruchu i zdrowiu. Port trzeba dodać i zapisać w scenie poza Play Mode.
 - Asystent: kontrolna kompilacja aktualnego runtime i Editor Framework/ThePirate z bibliotekami Unity 6000.6.3f1: 0 błędów (CS0649 dotyczy pól Inspectora). 28 sprawdzeń produkcyjnej logiki z zastępnikami Unity przeszło poza edytorem: faktyczne obrażenia vs restore, zgodność starego/nowego zapisu i błędne stany, odliczanie/odnawianie walki, pościg bez trafień, zwalnianie cum, warunki prędkości, zajętości, przeszkody, sceny i identyfikatora. Nie testowano fizyki ani pełnej serializacji/load w Unity.
 - Instrukcja i scenariusze: SETUP_PORT.md. Generacja/import prefabu, wygląd oraz Play Mode pozostają niepotwierdzone. Następny krok: umieścić port menu, zapisać ShipSandbox i sprawdzić E, blokadę walki, odcumowanie i save/load. Bez handlu/napraw/ekranu portu. Kopia plików przed integracją: katalog roboczy port-stage/backup-*. Bez commit/push.
+## Woda w ShipSandbox — 2026-10-03
+
+- Po zatwierdzeniu użytkownika poprawiono istniejący obiekt Sea/water: MeshFilter używa siatki WaterBlock_50m (1951 wierzchołków) zamiast wbudowanego Plane. Skala X/Z = 20 zachowuje powierzchnię około 1000 × 1000 m; pozycja Y = 0 i materiał RealisticOcean pozostają zachowane. Fale są efektem wizualnym shaderu, bez symulacji wyporności.
+- Wyłączono MeshCollider wody oraz Cast Shadows. Woda nie stanowi przeszkody dla statków/pocisków. Wyłączony stary WaterBlock_50m pozostaje wyłączony. Nie zmieniono shaderu, materiału, statków, prefabów ani ustawień URP.
+- Kontrola pliku sceny: zmieniono dokładnie cztery wartości w trzech komponentach i transformacji; referencje siatki i materiału odpowiadają istniejącym .meta. PC_RPAsset ma włączoną Depth Texture wymaganą przez shader. Celowanie ShipCombatController używa matematycznej płaszczyzny, więc nie wymaga collidera wody.
+- Nie przeprowadzono importu, kompilacji shaderu ani Play Mode w Unity. Następny krok: ponownie otworzyć ShipSandbox z dysku poza Play Mode, sprawdzić wodę przy różnych poziomach zoomu oraz ruch i ostrzał. Mobile_RPAsset ma wyłączoną Depth Texture; ustawień mobilnych nie zmieniano w tym etapie.
+- Kopia sceny i poprzedniego STATUS.md: C:\Users\Użytkownik\Documents\ChatGPT\GameWorkv0.1\water-stage\backup-20261003-201724. Bez commit/push.
+## Moździerz — 2026-10-03
+
+- Na polecenie użytkownika rozwinięto istniejący SpecialWeaponController/Cannon/CannonProjectile: PPM celuje, LPM zatwierdza (istniejące wejście), wysoki łuk, eksplozja przy kontakcie/przecięciu powierzchni wody i dodatkowy spherecast przebytej drogi. Cel zostaje ustalony przy strzale.
+- Eksplozja domyślnie rani tylko wrogów, raz na kadłub, ze spadkiem obrażeń do krawędzi. Osobne Damage Allies/Damage Owner w Inspectorze. Neutralne obiekty bez obrażeń. Zachowano blokady dokowania, modułu oraz zapis przeładowania.
+- Zaktualizowano wyłącznie parametry moździerza w PlayerShip.prefab: 20–100 m, 100 obrażeń, promień 6 m, reload 15 s, minimum wysokości łuku 25 m. Flight Time 3 jest minimum, rzeczywisty czas domyślny około 4.5 s. Scena i niezwiązane zmiany zachowane.
+- Kompilacja kontrolna aktualnego runtime i Editor z bibliotekami projektu: 0 błędów, CS0649 dla pól Inspectora. Nie uruchomiono Unity ani Play Mode. Brak nowego VFX; opcjonalny Impact Effect w istniejącym prefabie pocisku. Pociski w locie nie są zapisywane.
+- Następny krok: scenariusze Play Mode w SETUP_MORTAR.md. Kopia poprzednich plików w mortar-stage/backup-*. Bez commit/push.
+
+## Przeładowanie broni specjalnej w HUD — 2026-10-03
+
+- Dodano piąty HudBatteryWidget Special po prawej stronie schematu statku (100,0), z podpisem MOŹDZIERZ. Zachowano cztery dotychczasowe wskaźniki i ich położenie. Zmiany w istniejących ReloadShip.prefab/PlayerHud.prefab; edytowalne uGUI i istniejące meta zachowane.
+- ShipHudAdapter przekazuje stan SpecialWeaponController: czas pozostały i pełny czas przeładowania, gotowość niezależną od punktu celowania, zaznaczenie podczas celowania i zniszczenie modułu. Korzysta z istniejących snapshotów/zdarzeń HUD. Brak broni pokazuje kreskę; dokowanie blokuje gotowość. Pauza i wczytanie używają rzeczywistego stanu przeładowania moździerza.
+- Zaktualizowano generator i wartości podglądu. Kompilacja kontrolna runtime i Editor: 0 błędów. Kontrola prefabów: pięć wskaźników, poprawne lokalne referencje, CanvasRenderer dla grafik, raycast targets wyłączone, istniejące obiekty HUD zachowane.
+- Nie uruchomiono Unity/Play Mode ani podglądu wizualnego w edytorze. Następny krok: sprawdzić MOŹDZIERZ po prawej stronie HUD, strzał i odliczanie 15 s, postęp, gotowość, PPM, pauzę i save/load. Bez commit/push. Kopia poprzednich plików w special-hud-stage/backup-*.
+
+## Znacznik moździerza na środku HUD statku — 2026-10-03
+
+- Na polecenie użytkownika przeniesiono istniejący Special z (100,0) do (0,0) schematu statku w ReloadShip.prefab. Kompaktowy pierścień (około 25 px), licznik 8 px, podpis MOŹDZIERZ pod wskaźnikiem (0,-32). Cztery pozostałe wskaźniki, referencje, timer i meta zachowane. Generator tworzy ten sam układ.
+- Kompilacja kontrolna generatora z runtime/Editor: bez błędów. Kontrola prefabów potwierdza zachowanie pozostałych obiektów i identyfikatorów. Nie uruchomiono Unity ani Play Mode; czytelność przy różnych rozdzielczościach wymaga sprawdzenia.
+- Następny krok: sprawdzić środkowy wskaźnik w HUD i odliczanie po strzale. Bez commit/push. Kopia plików w mortar-marker-stage/backup-*.
+
+## Widoczność zasięgów ponad wodą — 2026-10-03
+
+- FireRangeVisualizer rysuje sektory oraz okrąg moździerza 0.65 m ponad Water Height z ShipCombatController (nowa właściwość tylko do odczytu). Poprzednie wysokości 0.12/0.15 m były niższe niż bieżące fale materiału RealisticOcean, Wave Height 0.477.
+- Materiał znaczników ma renderQueue 3100, po wodzie Transparent/3000. Zachowano istniejący shader Sprites/Default i jego test głębokości; nie włączano rysowania przez wyspy/budynki. Inspector / FireRangeVisualizer: Surface Offset i Indicator Render Queue do dostosowania przy zmianie wody.
+- Kompilacja kontrolna runtime i Editor z bibliotekami projektu: bez błędów. Bez zmian w materiale wody, scenie, prefabach, colliderach, celowaniu, obrażeniach i meta. Nie uruchomiono Unity ani Play Mode; widoczność i zasłanianie wymagają sprawdzenia w edytorze.
+- Następny krok: w ShipSandbox sprawdzić sektory po wyjściu z PPM, okrąg podczas PPM, fale i zoom, oraz zasłanianie przez wyspę/budynek. Show Sectors musi być włączone; podczas celowania moździerzem sektory są celowo ukryte. Kopia poprzednich plików w range-water-fix/backup-*. Bez commit/push.

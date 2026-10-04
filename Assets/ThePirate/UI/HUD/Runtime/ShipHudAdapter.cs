@@ -15,6 +15,7 @@ namespace ThePirate.UI.HUD
         private ShipMovementController movement;
         private ShipMovement legacyMovement;
         private ShipCombatController combat;
+        private SpecialWeaponController special;
         private Rigidbody body;
         private readonly List<HudBattery> batteries = new List<HudBattery>();
         private readonly List<HudMapMarker> markers = new List<HudMapMarker>();
@@ -24,6 +25,7 @@ namespace ThePirate.UI.HUD
             health = GetComponent<Health>(); ship = GetComponent<CombatShip>();
             movement = GetComponent<ShipMovementController>(); legacyMovement = GetComponent<ShipMovement>();
             combat = GetComponent<ShipCombatController>(); body = GetComponent<Rigidbody>();
+            special = GetComponent<SpecialWeaponController>();
         }
 
         // Podłączenie przyszłego systemu wyboru celu; punkt celowania nie oznacza wybranego statku.
@@ -63,6 +65,9 @@ namespace ThePirate.UI.HUD
                         battery.Ready, combat.Selected == battery, condition != null && condition.Destroyed,
                         battery.ReloadRemaining, battery.ReloadDuration));
                 }
+            if (special != null)
+                batteries.Add(new HudBattery(EntityId.ToULong(special.GetEntityId()), HudBatterySide.Special, 1,
+                    special.Ready, special.Aiming, special.Destroyed, special.ReloadRemaining, special.ReloadDuration));
             batteries.Sort((a, b) => a.Side != b.Side ? a.Side.CompareTo(b.Side) : a.Id.CompareTo(b.Id));
             store.SetBatteries(batteries);
 

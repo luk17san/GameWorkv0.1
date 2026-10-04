@@ -627,12 +627,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.SpecialWeaponController
   mortar: {fileID: 4335599212690653004}
   condition: {fileID: 8795957326980559983}
-  minimumRange: 15
+  minimumRange: 20
   maximumRange: 100
   flightTime: 3
-  reloadTime: 12
-  damage: 50
+  reloadTime: 15
+  damage: 100
   blastRadius: 6
+  minimumArcHeight: 25
+  damageAllies: 0
+  damageOwner: 0
 --- !u!1 &3737064024342420375
 GameObject:
   m_ObjectHideFlags: 0

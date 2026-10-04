@@ -25,20 +25,20 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _DepthRange: 8
+    - _DepthRange: 9.8
     - _FoamDistance: 0.7
     - _FoamStrength: 0.75
-    - _FresnelPower: 4
-    - _FresnelStrength: 0.45
-    - _Opacity: 0.82
-    - _Smoothness: 0.88
-    - _SunSpecular: 1.2
-    - _WaveHeight: 0.22
-    - _WaveScale: 1
-    - _WaveSpeed: 0.8
+    - _FresnelPower: 4.12
+    - _FresnelStrength: 0.223
+    - _Opacity: 0.783
+    - _Smoothness: 0.663
+    - _SunSpecular: 0.83
+    - _WaveHeight: 0.477
+    - _WaveScale: 3.03
+    - _WaveSpeed: 1.89
     m_Colors:
-    - _DeepColor: {r: 0.015, g: 0.12, b: 0.22, a: 0.9}
-    - _FoamColor: {r: 0.82, g: 0.94, b: 0.91, a: 1}
+    - _DeepColor: {r: 0.24007654, g: 0.43381768, b: 0.6132076, a: 0.9}
+    - _FoamColor: {r: 0.17808829, g: 0.5471698, b: 0.45192298, a: 1}
     - _ShallowColor: {r: 0.12, g: 0.55, b: 0.58, a: 0.72}
     - _WaveDirection: {r: 0.8, g: 0, b: 0.6, a: 0}
   m_BuildTextureStacks: []

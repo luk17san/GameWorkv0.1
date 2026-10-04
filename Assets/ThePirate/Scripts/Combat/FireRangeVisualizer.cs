@@ -6,6 +6,10 @@ namespace ThePirate.Combat
     public sealed class FireRangeVisualizer : MonoBehaviour
     {
         [SerializeField] private bool showSectors = true;
+        [Tooltip("Wysokość znaczników ponad płaszczyzną wody; ustaw powyżej maksymalnej wysokości fal.")]
+        [SerializeField, Min(0f)] private float surfaceOffset = 0.65f;
+        [Tooltip("Kolejka renderowania znaczników; powinna być późniejsza niż kolejka materiału wody.")]
+        [SerializeField, Range(3001, 3999)] private int indicatorRenderQueue = 3100;
         private ShipCombatController combat;
         private SpecialWeaponController special;
         private LineRenderer[] lines;
@@ -17,6 +21,8 @@ namespace ThePirate.Combat
             var shader = Shader.Find("Sprites/Default");
             if (shader == null) { enabled = false; return; }
             material = new Material(shader);
+            // Rysuj po przezroczystej wodzie. Shader nadal sprawdza głębokość sceny.
+            material.renderQueue = indicatorRenderQueue;
             lines = new LineRenderer[combat.Batteries.Length];
             for (int i = 0; i < lines.Length; i++) lines[i] = MakeLine("Sector " + i);
             circle = MakeLine("Mortar target");
@@ -41,7 +47,7 @@ namespace ThePirate.Combat
                 {
                     float angle = -battery.FiringArc / 2 + battery.FiringArc * j / 32;
                     Vector3 direction = Quaternion.AngleAxis(angle, Vector3.up) * battery.transform.forward;
-                    Vector3 center = battery.transform.position; center.y = 0.12f;
+                    Vector3 center = battery.transform.position; center.y = combat.WaterHeight + surfaceOffset;
                     line.SetPosition(j, center + direction * battery.MaximumRange);
                     line.SetPosition(65 - j, center + direction * battery.MinimumRange);
                 }
@@ -52,7 +58,8 @@ namespace ThePirate.Combat
             for (int i = 0; i < 66; i++)
             {
                 float angle = i * Mathf.PI * 2 / 66;
-                circle.SetPosition(i, special.Target + new Vector3(Mathf.Cos(angle) * special.Radius, 0.15f, Mathf.Sin(angle) * special.Radius));
+                Vector3 center = special.Target; center.y = combat.WaterHeight + surfaceOffset;
+                circle.SetPosition(i, center + new Vector3(Mathf.Cos(angle) * special.Radius, 0f, Mathf.Sin(angle) * special.Radius));
             }
         }
         private void OnDisable() { if (lines != null) foreach (var line in lines) if (line != null) line.enabled = false; if (circle != null) circle.enabled = false; }

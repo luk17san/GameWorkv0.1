@@ -144,7 +144,8 @@ namespace ThePirate.UI.HUD
             RenderBatteries(new [] { new HudBattery(1,HudBatterySide.Bow,1,false,false,false,1.2f,6),
                 new HudBattery(2,HudBatterySide.Left,4,false,false,false,2.4f,6),
                 new HudBattery(3,HudBatterySide.Right,4,true,false,false,0,6),
-                new HudBattery(4,HudBatterySide.Stern,1,true,false,false,0,6) });
+                new HudBattery(4,HudBatterySide.Stern,1,true,false,false,0,6),
+                new HudBattery(5,HudBatterySide.Special,1,false,false,false,7.5f,15) });
         }
     }
 }
