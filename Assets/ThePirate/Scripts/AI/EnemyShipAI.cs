@@ -49,6 +49,21 @@ namespace ThePirate.AI
         public int SelectedSide => selectedSide; // -1 = left, +1 = right, 0 = none
         public bool TargetInBroadsideSector => targetInBroadsideSector;
 
+        public Vector3 Home => home;
+        public void ConfigureSpawn(ThePirate.Spawning.EnemySpawnProfile profile, float speedMultiplier, Vector3 origin)
+        {
+            home = origin;
+            if (profile.overrideAI)
+            {
+                detectionRange = profile.detectionRange; loseTargetRange = profile.loseTargetRange;
+                territoryRadius = profile.territoryRadius; approachDistance = profile.approachDistance;
+                minimumDistance = profile.minimumDistance; cruiseSpeed = profile.cruiseSpeed;
+                maneuverSpeed = profile.maneuverSpeed; enableWeapons = profile.enableWeapons;
+                OnValidate();
+            }
+            cruiseSpeed *= speedMultiplier; maneuverSpeed *= speedMultiplier;
+        }
+
         private void Awake()
         {
             ship = GetComponent<CombatShip>();

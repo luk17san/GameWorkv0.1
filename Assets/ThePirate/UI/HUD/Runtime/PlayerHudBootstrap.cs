@@ -18,7 +18,7 @@ namespace ThePirate.UI.HUD
         private static void InitializeOpenScene() => Install(SceneManager.GetActiveScene());
         private static void SceneLoaded(Scene scene, LoadSceneMode mode) => Install(scene);
 
-        private static void Install(Scene scene)
+        public static void Install(Scene scene)
         {
             if (scene.path != PirateMenuBootstrap.GameplayScene) return;
             CombatShip player = null;
@@ -51,6 +51,7 @@ namespace ThePirate.UI.HUD
                 SceneManager.MoveGameObjectToScene(instance, scene);
                 view = instance.GetComponent<PlayerHudView>();
             }
+            player.GetComponent<PlayerHudController>().RefreshNow();
             if (view != null) view.Bind(player.GetComponent<PlayerHudController>());
         }
     }

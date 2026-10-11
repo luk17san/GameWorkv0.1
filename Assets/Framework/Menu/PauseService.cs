@@ -27,6 +27,9 @@ namespace Framework.Menu
             AudioListener.pause = false;
         }
 
+        // Kliknięcie odcumowania nie może stać się strzałem w tej samej klatce.
+        public static void SuppressGameplayInputThisFrame() => blockedThroughFrame = Time.frameCount;
+
         public void SetPaused(bool paused)
         {
             if (paused)

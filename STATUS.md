@@ -1,343 +1,138 @@
-# Stan projektu
+# PortVisualKit — 2026-10-05
+
+- Przygotowano 7 PNG: tło, rama, 2 stany przycisków, pergamin, atlas 12 ikon i portret statku. Wbudowane imagegen; prompty w PROMPTS.md.
+- Osobny PortVisualKitBuilder generuje 12 wzorców obiektów oraz kompletny PortVisualCanvas. Prawdziwe komponenty uGUI, osobne teksty i paski Slider, 9-slice przycisków/pergaminu, import ikon jako osobne Sprite subassets.
+- Generator tworzy nowy Build-XX, zachowuje starsze wersje, nie zapisuje scen i nie zmienia istniejącego PortMenu.prefab. Domyślny font Unity; opcjonalna własna PortSerif.ttf.
+- Przeczytano aktualne AGENTS.md, PLAN.md, STATUS.md, PortMenuLayout i PortMenuPrefabBuilder oraz ścieżkę PortMenuController. W projekcie istnieje już logika napraw, ładowni, ulepszeń i stoczni; zestaw wizualny pozostaje osobnym materiałem do integracji.
+- Kontrolna kompilacja kodu z bibliotekami Unity 6000.6.3f1: 0 błędów. Kontrola PNG i alfa wykonana poza Unity. Import/generowanie prefabów, wygląd w edytorze i Play Mode nie zostały przeprowadzone.
+- Gotowa paczka jest w workspace ChatGPT; nie kopiowano plików do aktywnego checkoutu GitHub, nie zmieniano jego scen ani istniejących skryptów/prefabów, bez commit/push.
+- Następny krok: import zestawu i wygenerowanie obiektów w Unity; następnie podłączenie wyglądu do PortMenuView i usług w osobnym etapie.
+
+## PortVisualKit — etap 2: integracja usług, 2026-10-05
+
+- Na polecenie użytkownika podłączono nowy panel wizualny do istniejących usług. PortMenuView zachowuje logikę napraw/ładowni/ulepszeń/stoczni; nowy PortVisualBridge obsługuje nawigację i odczyt rzeczywistego złota, nazwy projektu statku, HP kadłuba i masy ładowni. Ekwipunek prowadzi obecnie do listy ładowni, Warsztat do ulepszeń, Stocznia do kupna/budowy, Naprawy do dotychczasowych wycen, Wypłyń do odcumowania.
+- Flota/zadania/handel/magazyn/tawerna nie mają jeszcze usług i są wyłączone. Przykładowy quest ukryto, liczba załogi pokazuje brak danych. Portret statku pozostaje ilustracją. Nie rozszerzono ekonomii ani zapisu; kupno/budowa nadal wymienia aktywny statek z istniejącym potwierdzeniem.
+- PortVisualIntegrationBuilder po imporcie poza Play Mode łączy ostatni wygenerowany PortVisualCanvas z istniejącym PortMenu.prefab, zachowuje jego GUID i referencje usług. Weryfikuje 22 referencje mostka przed zapisem. Zachowuje edytowalne obiekty i blokuje kliknięcia przez tło UI. Można wykonać ręcznie Tools > GameWork > Ports > Visual kit > Connect port to game logic. Wynik generowania: Temp/PortVisualIntegration.result.
+- Kompilacja kontrolna aktualnych źródeł Framework/ThePirate z lokalnymi bibliotekami Unity 6000.6.3f1: 0 błędów; ostrzeżenia CS0649 Inspectora i CS1701 kompilatora kontrolnego. Import i migracja prefabu wymagają osobnego potwierdzenia; Play Mode, wygląd i kliknięcia usług pozostają do sprawdzenia.
+- Backup wcześniejszego PortMenuView, PortMenu.prefab + .meta i STATUS: workspace ChatGPT/port-ui-integration/backup-before-install. Unity dodatkowo zapisuje kopię prefabu w Temp/PortVisualIntegrationBackup przed migracją. Bez zmian scen i bez commit/push.
+- Następny krok: w ShipSandbox zacumować E, sprawdzić aktualne dane, naprawę, ładownię, ulepszenia, anulowanie/potwierdzenie kupna lub budowy, Wypłyń oraz przerwanie menu przy zagrożeniu. Pauza i zmiana statku powinny zachować dotychczasowy cykl menu.
+
+- Weryfikacja w działającym Unity przez istniejące Unity Pipeline: migracja PortMenu.prefab wykonana, 22 referencje mostka zweryfikowane; walidacja Edit Mode potwierdziła obecność usług i budowy, jeden Canvas, brak Missing Script, komplet CanvasRenderer, wyłączone niezaimplementowane usługi i ukryty przykładowy quest. Wyrenderowano dwa podglądy poza sceną gry w port-ui-integration/Verification. Play Mode i faktycznych transakcji nie przeprowadzono. Próba osobnej kopii wsadowej nie powiodła się z powodu konfiguracji ILPostProcessor; walidację dokończono w otwartym edytorze.
+
+- Doprecyzowanie weryfikacji: zapisane podglądy offscreen były puste, więc nie potwierdzają wyglądu UI. Kolejna próba renderowania została zatrzymana przez błąd kodowania narzędzia run_script. Kontrola struktury i referencji prefabu pozostaje zaliczona; wygląd, kliknięcia i transakcje wymagają Play Mode.
+
+## Ekwipunek portu — 2026-10-05
+- Przygotowano edytowalny panel uGUI: siatka przewijana, filtry katalogu, szczegóły, masa i wyrzucanie 1/stosu z potwierdzeniem. PortMenuView wiąże panel z istniejącym ShipCargo/CargoInventory. Bez zmian katalogu, ekonomii i formatu zapisu. Kompilacja kontrolna: 0 błędów. Import i prefab oraz Play Mode pozostają do weryfikacji. Kopia poprzedniego widoku: workspace ChatGPT/port-inventory/backup. Bez zmian scen i commit/push.
+
+- Unity wygenerowało i zapisało panel Inventory w PortMenu.prefab przez Tools/GameWork/Ports/Create inventory panel. Zachowano oddzielne obiekty i wcześniejsze usługi; meta skryptów wygenerowane przez Unity. Zasoby w obecnym katalogu nie mają przypisanych ikon ani opisów — UI korzysta z tych pól po uzupełnieniu Inspector. Play Mode nadal nieprzeprowadzony.
+
+- Walidacja Edit Mode w Unity: PASS — 11 referencji panelu, 4 filtry, wszystkie CanvasRenderer oraz zachowane usługi portu. Play Mode pozostaje do sprawdzenia.
+
+## CannonCombat VFX — podłączenie zdarzeń, 2026-10-06
+- Cannon.Emit: błysk/dym każdego rzeczywistego strzału, także moździerza, oraz dym po salwie. Istniejący CannonBarrelRecoilVFX jest wywoływany opcjonalnie; wymaga przypisania osobnej lufy.
+- CannonProjectile.Launch: ślad dymny. Trafienie: punkt i normalna kontaktu, drzazgi dla statku, pył dla lądu, rozbryzg dla wody bez collidera w ścieżce moździerza; większy efekt moździerza. Nie dodano mechaniki krytyków.
+- CombatVFXLink tworzy wizualne komponenty dla aktywnych statków; Health.Changed steruje dymem i ogniem także po naprawie/wczytaniu. Udana PortRepairService.TryRepair wywołuje efekt naprawy; samo wczytanie nie wywołuje naprawy.
+- ShipSinking.Begin uruchamia dym/bąble, zachowując istniejącą animację ruchu zatonięcia. Piana zależy od prędkości Rigidbody. Punkty przy burtach wynikają z BoxCollider; domyślny poziom piany/wody VFX to Y=0.65 i wymaga oceny wizualnej w ShipSandbox.
+- Tekstury skopiowano do Resources/GameWork/CannonVFX, dzięki czemu podłączenie działa również dla statków tworzonych przez stocznię, bez ręcznej przebudowy prefabów.
+- Poprawiono zatrzymanie ParticleSystem przed konfiguracją, materiały przezroczyste URP i nieobsługiwane GetInstanceID w pakiecie.
+- Kompilacja kontrolna źródeł Framework/ThePirate z bibliotekami Unity 6000.6.3f1: PASS, 0 błędów. Nie wykonano importu/walidacji w edytorze ani Play Mode; wygląd, wielkość, położenie piany, kierunek błysku i trafienia wymagają testu Unity. Meta nowych plików ma wygenerować Unity. Bez commit/push. Backup w workspace ChatGPT/vfx-stage/backup-*.
+
+## Czytelność i wygląd VFX — 2026-10-06
+- Na podstawie informacji użytkownika o zbyt słabej widoczności zwiększono błysk lufy 0.85→2.4 m (czas 0.12→0.18 s), dym 0.62→1.55 m, rozbryzg 1→3.2 m, trafienie kadłuba 0.65→2.2 m, ślad kuli 0.16→0.42 m. Są to domyślne wartości komponentów tworzonych w runtime; własne wartości serializowane w Inspectorze pozostają nadrzędne.
+- Dodano gorący rdzeń błysku i trafienia kadłuba, drobne żarzące cząstki przy lufie, rozszerzanie sprite dymu/rozbryzgu i grawitację kropli/odłamków. Wzmocniono dym uszkodzeń, płomienie, pianę i czytelność naprawy. Dym salwy pozostaje ograniczony czasowo.
+- ParticleSystemScalingMode.Shape uniezależnia rozmiar cząsteczek od skali rodzica, zachowując lokalne punkty emisji. Pierścienie mają szerszą linię i współdzielony materiał cząsteczek z przezroczystością zamiast URP/Unlit. Naprawiono blok inicjalizacji Play błysku.
+- Kontrolna kompilacja pełnych aktualnych źródeł Framework/ThePirate z bibliotekami Unity 6000.6.3f1: PASS, 0 błędów. Nie wykonano Play Mode ani renderowania sceny; końcowy wygląd i nakładanie dymu przy pełnej salwie wymagają oceny w Unity z normalnym i maksymalnym oddaleniem kamery. Bez zmian mechanik, scen, tekstur i commit/push. Backup w workspace ChatGPT/vfx-polish/backup-*.
+
+## Trajektoria moździerza — 2026-10-06
+- PPM pokazuje okrąg celu i linię przewidywanej trajektorii od lufy; LPM strzela. Podgląd i strzał korzystają z SpecialWeaponController.TryGetTrajectory. Linia znika po strzale/anulowaniu/wyłączeniu komponentu, kolor odpowiada poprawności celu.
+- Czas lotu rośnie liniowo z odległością: Close Flight Time domyślnie 1.25 s przy 20 m, około 4.52 s przy 100 m z istniejącymi Flight Time=3 i Minimum Arc Height=25. Bliskie strzały lecą niżej. Parametry dalekiego lotu i istniejące prefaby zachowują dotychczasowe wartości.
+- Zmieniono SpecialWeaponController.cs i FireRangeVisualizer.cs. Zachowano obsługę Rigidbody, kolizji, obrażeń, VFX, przeładowania i sterowania.
+- Kontrolna kompilacja pełnych źródeł Framework/ThePirate z bibliotekami Unity 6000.6.3f1: PASS, 0 błędów. Sprawdzenie obliczeń dla 20/60/100 m: monotoniczny czas i wysokość, koniec toru na celu (start Y=2, cel Y=0). Nie wykonano Play Mode ani importu w edytorze. Podgląd pokazuje pełny tor balistyczny do celu; przeszkoda może przerwać rzeczywisty lot wcześniej. Dyskretna integracja Rigidbody może dać niewielką różnicę względem krzywej analitycznej.
+- Następny krok: Unity ShipSandbox, sprawdzić podgląd po PPM, cele bliskie/dalekie, LPM i anulowanie PPM oraz trafienie w statek/ląd/wodę. Backup: workspace ChatGPT/mortar-trajectory/backup-*. Bez commit/push.
+
+## Salwy burtowe do punktu kursora — 2026-10-06
+- WeaponBattery oblicza czas lotu z odległości od środka luf i Projectile Speed (prędkość pozioma), następnie prędkość pionową do poziomu wody. Salwa zachowuje równoległe przesunięcie poziome i rozstaw dział, z istniejącym rozrzutem; kursor wskazuje środek przybliżonego obszaru upadku. Przy różnych wysokościach luf prędkości pionowe są dostosowane osobno. Tor ustalany na początku salwy; ruch statku podczas opóźnień może nieznacznie przesunąć miejsca upadku.
+- CanFire/Safe sprawdzają łuk od każdej lufy w 24 odcinkach zamiast prostej. Zachowano ochronę przed własnym kadłubem i przeszkodami/innymi statkami w ostrzale AI, obrażenia, ulepszenia, kary uszkodzeń, przeładowanie i opóźnienia salwy. Wspólna zmiana obejmuje również AI oraz baterie dziobową/rufową.
+- CannonProjectile wykonuje kontrolę odcinka i trafienia w wodę dla wszystkich pocisków z włączoną grawitacją, nie tylko moździerza. Trafienie w wodę kończy lot i uruchamia istniejący rozbryzg; wcześniejsze trafienie w statek/ląd działa jak dotychczas.
+- ShipCombatController wybiera baterię, która rzeczywiście może strzelić w punkt kursora. FireRangeVisualizer pokazuje tylko jej sektor i przewidywane trajektorie poszczególnych luf; przeładowanie, uszkodzenie lub brak poprawnego celu je ukrywają. Podczas celowania moździerzem widoczny pozostaje jego dotychczasowy podgląd. Linie pokazują tor bez losowego rozrzutu i bez skracania na pierwszej przeszkodzie.
+- Zmieniono WeaponBattery.cs, ShipCombatController.cs, CannonProjectile.cs, FireRangeVisualizer.cs. Bez zmian prefabów/scen i formatu zapisu. Backup: workspace ChatGPT/broadside-trajectory/backup-*.
+- Kontrolna kompilacja pełnych bieżących źródeł Framework/ThePirate z bibliotekami Unity 6000.6.3f1: PASS, 0 błędów. Osobne sprawdzenie wzorów dla 8/20/40/80 m, trzech wysokości luf: koniec toru na wodzie, środek salwy i zachowany rozstaw PASS. Przy 35 m/s czasy wynoszą około 0.23/0.57/1.14/2.29 s. Odczyt kodu potwierdza wywołanie wspólnej baterii przez EnemyShipAI i istniejącego VFX wody; nie jest to test runtime.
+- Nie przeprowadzono importu w Unity ani Play Mode. Do sprawdzenia w ShipSandbox: obie burty i dziób/rufa, bliski/daleki kursor, zmiana wybranej baterii, blokada przeładowania, cel poza sektorem, woda/ląd/kadłub, zachowanie AI, pauza oraz podgląd moździerza. Dyskretna fizyka może dać niewielkie odchylenie od analitycznego podglądu; wizualna ocena trajektorii i skuteczność AI pozostają niepotwierdzone. Bez commit/push.
+
+
+## Pływające materiały i łup — 2026-10-06
+
+- Dodano FloatingLoot, ShipLootCollector i generator edytowalnych prefabów Planks/Wreckage. Wizualne kołysanie nad ustawionym poziomem, zbieranie najbliższej paczki pod E w 10 m od środka gracza. CargoInventory atomowo dodaje zasoby; odmowa pozostawia łup. Port ma pierwszeństwo pod E; pauza i brak fokusu blokują wejście.
+- ShipResourceReward wystawia paczki z istniejącej tabeli zamiast automatycznego przyznawania materiałów. Złoto bez zmiany. Wczytanie i ponowne obrażenia nie generują dodatkowej nagrody.
+- VoyageSaveData/Runtime zapisują i odtwarzają nieodebrany łup; sprawdzają zasoby, ilości, pozycje i limit. Nowa pusta lista usuwa początkowe obiekty sceny; starszy zapis bez pola zachowuje rozstawione obiekty. Nie zapisujemy własnych wizualnych wariantów ani fazy kołysania.
+- Bez zmian scen, istniejących prefabów i meta. Unity generuje nowe meta/prefaby po imporcie. Instrukcja: SETUP_FLOATING_LOOT.md. Bez commit/push.
+- Weryfikacja: kontrolna kompilacja pełnych źródeł z bibliotekami Unity 6000.6.3f1: PASS, 0 błędów (ostrzeżenia CS0649/CS1701). 21 sprawdzeń wyodrębnionych metod produkcyjnych walidacji i zbierania z rzeczywistym CargoInventory: PASS; zastępniki cyklu życia Unity, brak testu fizyki/JsonUtility. Import Unity, prefab generation i Play Mode pozostają niepotwierdzone. Następny krok: test zbierania, pełnej ładowni, E przy porcie i zapisu podczas zatapiania.
+
+## Ilustrowane menu główne — 2026-10-07
+- Wdrożono MainMenu według referencji użytkownika: malowany port o zachodzie słońca, osobne logo, pergaminowe przyciski z czerwonym haftem słowiańskim, oddzielne ikony i edytowalne napisy. Twórcy pominięci. Cztery prefaby w Assets/ThePirate/UI/MainMenuVisualKit/Prefabs. GUID sceny i istniejące usługi zachowane.
+- Nowa gra/Wczytaj/Wyjście korzystają z MainMenuView/GameFlow/SaveMenuActions. Dodano panel głośności ogólnej i istniejących poziomów QualitySettings, wyciszenie oraz PlayerPrefs. PL jest oznaczeniem języka; nie dodano nieobsługiwanych przycisków muzyki, lokalizacji i aktualizacji. Bez zmian formatu zapisu, pauzy i ShipSandbox.
+- PirateMainMenuLayout obsługuje proporcje i Screen.safeArea, zostawia miejsce na komunikaty; Wyjście ukrywa się w Android/iOS. MainMenuVisualBuilder uruchamiany jawnie tworzy prefaby i migruje Canvas z kopią sceny w Documentation/MenuVisualBackups. Nowe meta wygenerowało Unity.
+- Kontrolna kompilacja pełnych źródeł Framework/ThePirate: PASS, 0 błędów. Unity import/generowanie/reference checks: PASS. Play Mode przy 1600x900, 2000x900 i 1200x900: PASS — zdarzenia przycisków ustawień, modal, suwak, wyciszenie, powrót, dostępność zapisu, polskie znaki i granice przycisków. Wyrenderowano i obejrzano rzeczywiste Game View menu oraz ustawień. Testy przycisków wywoływały Button.onClick; nie są testem fizycznej myszy/dotyku. Fizyczny telefon, wycięcia, pełne wczytanie podróży, odsłuch i build wymagają osobnego sprawdzenia.
+- Dokumentacja SETUP_MAIN_MENU_VISUAL_PL.md. Podglądy Documentation/MenuVisualPreviews; backup sprzed instalacji także w workspace ChatGPT/menu-implementation/backup-*. Bez commit/push.
+- Rzeczywiste zdarzenie Nowa gra sprawdzone w Play Mode: aktywna scena ShipSandbox załadowana poprawnie. Po testach wyłączono Play Mode i przywrócono ustawienia podglądu. Brak błędów menu w Console; wcześniejszy timeout diagnostycznego eval dotyczył Pipeline i został ominięty przez polecenia edytora.
+
+## Wybrzeze Trzech Sosen — 2026-10-10
+- Po zatwierdzeniu zakresu utworzono osobna scene Assets/ThePirate/Scenes/WybrzezeTrzechSosen.unity: Unity Terrain 3000 x 2000 m, heightmap 1025, poziom wody Y=0, collider terenu, piasek/trawa/skala z istniejacego ArchipelagoKit.
+- Recznie zinterpretowano kontury ilustracji art/Mapa na jasnym pergaminie.png: dwie glowne polnocne wyspy, poludniowy i wschodni lad, zatoki, ciesnina, mniejsze wyspy/skaly; 40 edytowalnych wielokatow w World/ThreePines/Coastlines.json. Wysokosci sa przyblizeniem, nie danymi geograficznymi.
+- Generator Editor/World/ThreePinesMapBuilder.cs tworzy nowe wersje sceny/TerrainData, bez nadpisywania wczesniejszego rzezbienia. Unity wygenerowalo meta. Osobny shader/material oceanu poprawia obsluge glebi dla kamery ortograficznej; material i shader istniejacego oceanu pozostaja niezmienione.
+- Unity 6000.6.3f1: generowanie/import PASS; TerrainCollider raycasts w 3 glownych obszarach ladu 3/3 (Editor); kompilacja bez bledow. Zapisano i oceniono podglad z gory Documentation/ThreePines/Overview.png. To nie jest dowod plywania ani kolizji statku w Play Mode.
+- Scena zawiera kamere przegladowa i pusty Punkt_startowy_statku; bez mechanik gry/statku, drzew, osad i portow. Bez zmian Build Settings, MainMenu i ShipSandbox. Otwarta nowa scena w edytorze. Dokumentacja SETUP_THREE_PINES_PL.md.
+- Nastepny krok: ocena konturow przez uzytkownika, dopracowanie terenu, potem drzewa/zabudowa i integracja statku z testem Play Mode. Bez commit/push.
+
+## Statek gracza i port w WybrzezeTrzechSosen — 2026-10-10
+- Dodano kopie aktualnego PlayerShip z ShipSandbox (model/uzbrojenie/ruch), pozycja (-667.26,0.5,399), kierunek +X. Port_Trzech_Sosen jest instancja istniejacego PortDock z unikalnym id three-pines-northwest-port, przy zatoce NW; drewniany pomost i lacznik z plaza, istniejace materialy Wood_Warm/Shadow.
+- Main Camera ma TopDownCamera/Target=PlayerShip; ShipCombatController/Aim Camera=Main Camera i Water Height=0. PlayerHUD/Source jest jawnie przypisany do PlayerHudController na graczu (bootstrap HUD obsluguje tylko ShipSandbox).
+- Nowy Editor/World/ThreePinesGameplaySetup.cs: kontrolowana instalacja w tej scenie, ochrona przed drugim graczem, menu sprawdzenia dokowania w Play Mode. Kopia sceny sprzed zmian w workspace ChatGPT/map-stage/WybrzezeTrzechSosen.before-gameplay.unity.
+- Unity 6000.6.3f1: kompilacja bez bledow; spawn bez kolizji; Play Mode PASS po finalnej zmianie pomostu: CanDock (podejscie/fizyka), RestoreDock, dostepnosc PortRepairService, Undock, blokada/przywrocenie broni, przypisanie HUD. Metody wywolano programowo; fizyczne W/S/A/D/E, klikniecia uslug i dlugie plywanie pozostaja do sprawdzenia przez gracza.
+- Zapisano i oceniono podglad kamery Documentation/ThreePines/PlayerPort.png (bez Canvas HUD). Play Mode zakonczony, scena zapisana. Zaktualizowano SETUP_THREE_PINES_PL.md. Bez zmian istniejacego ShipSandbox/prefabow mechanik/menu/Build Settings, bez commit/push.
+
+## Mapa pergaminowa — 2026-10-10
+- Dodano ParchmentMapView i jawny generator ParchmentMapBuilder oraz kopię oryginalnego pergaminu jako teksturę UI. M otwiera/zamyka, Esc zamyka, znacznik śledzi X/Z i kurs statku. Otwarta mapa blokuje wejście rozgrywki; nie zatrzymuje świata.
+- Przeliczenie odpowiada ThreePinesMapBuilder: teren -1500..1500 X, -1000..1000 Z; obszar ilustracji x=40..1495, y od góry=40..970. Znacznik poza terenem jest ukryty. Po zmianie statku komponent wyszukuje aktywnego gracza w tej samej scenie.
+- Instalacja prefabu i powiązania sceny przez GameWork/Map/Wybrzeze Trzech Sosen/Install parchment map; oczekujące żądanie Temp/ParchmentMap.install. Generator chroni istniejącą mapę, wymaga zapisanej sceny i robi backup sceny. Unity generuje meta.
+- Weryfikacja instalacji/kompilacji i Play Mode wymaga aktualnego edytora; szczegóły SETUP_PARCHMENT_MAP_PL.md. Bez commit/push.
++- Weryfikacja finalna: kontrolna kompilacja Framework/ThePirate z nową mapą PASS, 0 błędów; Unity import i instalacja prefab/scena PASS (player UV 0.29,0.69), meta wygenerowane przez Unity. Poprawiono NPOT Scale=None, aby zachować 1536x1024.
++- Play Mode PASS: rzeczywisty komponent i marker reagują na zmianę X/Z oraz kurs 90 stopni; poza terenem marker ukryty, gameplay input zablokowane, Close działa. Wywołania programowe, fizyczne M/Esc nie testowane. Pozycję i obrót gracza odtworzono po teście.
++- Wygląd UI pozostaje do sprawdzenia: screenshot Pipeline pomija Canvas overlay, a dalsze próby ScreenCapture/run_script zatrzymał błąd ROSLYN001 Illegal byte sequence. Documentation/ThreePines/ParchmentMap.png pokazuje tylko kamerę i nie dowodzi wyglądu mapy. Play Mode zakończono.
 
-Data aktualizacji: 2026-09-27
+## Regulowany zasięg minimapy — 2026-10-10
+- HudMinimapView: Match Gameplay Camera domyślnie włączone; Visible Area Multiplier=4. Powierzchnia minimapy (koło) jest czterokrotnością obszaru ekranu rzutowanego na wodę Y=0. Promień sqrt(pole*mnożnik/pi); obliczenia obejmują perspektywę, pochylenie, zoom i proporcje ekranu. Gameplay Camera opcjonalna, domyślnie Main Camera z tej samej sceny.
+- Inspector PlayerHUD/SafeArea/Minimap: mnożnik >=0.01, Water Height zgodny z oceanem. Po wyłączeniu Match Gameplay Camera działa World Radius w metrach (minimum 1); także fallback, gdy nie wszystkie narożniki widoku trafiają płaszczyznę wody w zasięgu kamery. Znaczniki i obraz używają wspólnego promienia; usunięto wcześniejsze przesunięcie skali znaczników o 10 pikseli.
+- Kontrolna kompilacja: PASS 0 błędów. Unity import i Play Mode: PASS, pole kamery 31255.6 m², promień 199.489 m, stosunek powierzchni=4; mnożnik 16 podwaja promień, tryb ręczny 123 m działa. Metody wywołano programowo; fizyczny zoom i wygląd minimapy nie były testowane. Ustawienia testowe odtworzono, Play Mode zakończono. Kopia oryginalnego skryptu w workspace ChatGPT/minimap-scale-stage dostępna poprzez wcześniejszy stan pliku w hud-ui-stage; meta zachowane. Bez commit/push.
 
-## Obecny etap
+# Edytor przeciwników — 2026-10-10
 
-**Etap 3 — jedno działo i pocisk: zaakceptowany przez użytkownika 2026-09-27.** Użytkownik potwierdził, że działa. Następny planowany etap to ostrzał burtowy; jego implementacja nie została jeszcze rozpoczęta.
+- Dodano EnemySpawnZone, EnemySpawnProfile i EnemySpawnEditor: koło/prostokąt, grupy, poziomy, odnowienie, profile, punkty, wykluczenia, podgląd Gizmos, uchwyt promienia i otwieranie prefabu.
+- Operacje edytora rejestrują Undo; sceny oznaczane jako zmienione, bez automatycznego zapisu.
+- Walidacja sprawdza identyfikatory, liczebność, zakresy, dodatnie mnożniki, podstawowe komponenty i kolizje ręcznych punktów.
+- Kompilacja Roslyn z lokalnymi bibliotekami Unity i Assembly-CSharp: 0 błędów. Ostrzeżenia przestarzałego API wyszukiwania obiektów skorygowano dla bieżącego Unity 6000.6.
+- Nie wykonano testów importu, Edit Mode ani Play Mode. Nie zmieniono istniejących mechanik gry, scen, prefabów ani formatu zapisu.
+- Następny etap: podłączenie runtime, poziomów i trwałego zapisu wielu przeciwników. Zapis dotychczas rozpoznaje przeciwnika po drużynie i wymaga rozszerzenia przed uruchomieniem wielu wrogów.
 
-Sterowanie i kamera zostały wcześniej zaakceptowane. PlayerShip.prefab istnieje; odtworzenie nowej instancji prefabu nie zostało osobno potwierdzone.
 
-## Baza projektu
+## Linie celowania niezależne od zoomu — 2026-10-11
+- FireRangeVisualizer: ekranowe siatki uGUI, rdzeń 1.25 px PC / 2 px mobile, miękka krawędź 1 px i glow 2 px. Projekcja punktów świata przy budowaniu Canvas; gęstsze łuki 258 punktów. Aktywny sektor złoty, pozostałe gotowe sektory subtelne, trajektorie jasne.
+- Wspólne TryGetTrajectory nadal wyznacza tory dział/moździerza. Bez zmian inputu, balistyki, scen/prefabów/meta lub zapisu. Nakładka bez raycastów, pod HUD-em; linie widoczne nad geometrią sceny (bez zasłaniania głębokością).
+- Kontrolna kompilacja pełnych bieżących źródeł Framework/ThePirate z lokalnymi bibliotekami Unity/URP: PASS, 0 błędów. Unity import, wygląd przy zoomie, fizyczny telefon, wydajność i Play Mode nieprzetestowane.
+- Instrukcja SETUP_AIM_LINES_PL.md; backup w workspace ChatGPT/aim-lines-stage/backup-*. Następny krok: ShipSandbox, oba skrajne zoomy, obie burty, przeładowanie i PPM/LPM moździerza. Bez commit/push.
 
-- Repozytorium: https://github.com/luk17san/GameWorkv0.1
-- Unity: 6000.6.3f1; URP: 17.6.0; Input System: 1.20.0.
-- Wcześniej sprawdzony commit bazowy: 572adad1d7e6ee242a881039f0f665d454534d94. To zapis historyczny, nie oznaczenie aktualnego HEAD.
-- Manifest zawiera AI Assistant 2.20.0-pre.1 i Unity Pipeline 0.8.0-exp.1; działania tych integracji nie zweryfikowano.
-- Scena testowa: Assets/ThePirate/Scenes/ShipSandbox.unity.
+# Spawnowanie runtime — 2026-10-11
 
-## Co jest wykonane
+- Dyrektor automatycznie obsługuje istniejące strefy; grupy definiują miejsca, poziomy, limity i odnowienie. Punkty ręczne/losowe sprawdzane względem kamer, dystansu, przeszkód, statków i portów.
+- Parametry poziomu są stosowane per instancja do HP, WeaponBattery, prędkości ruchu i AI. Zachowano komponenty i nagrody z prefabów.
+- Zapis rozszerzono opcjonalnymi polami dynamicznych wrogów i miejsc odnowienia. Przygotowanie wszystkich przeciwników jest walidowane przed zatwierdzeniem gracza i ekonomii; niepowodzenie usuwa przygotowane kopie bez łupu.
+- Kompilacja kontrolna z aktualnymi źródłami projektu i bibliotekami Unity: 0 błędów. Istniejące ostrzeżenia pól Inspectora i VFX.
+- Dodano jawnie uruchamiany test batch Play Mode: dwie strefy, limity, poziomy, capture/restore JSON, odtworzenie HP, brak duplikatów, śmierć i wyczerpanie odnowień. Wynik wykonania zostanie dopisany po uruchomieniu.
+- Bez zmian zapisanych scen, prefabów, poziomów wody, warstw ani slotu użytkownika. Backup modyfikowanych źródeł w workspace enemy-spawn-runtime/backup-before-install.
+- Pozostaje ręczny test scen użytkownika: rozmieszczenie, wygląd HUD, ostrzał/kolizje, kamery, porty i balans. Stan AI po wczytaniu zaczyna od nowego wyboru celu, z zachowanym punktem powrotu.
 
-- Etap 2: użytkownik potwierdził poprawne działanie zdrowia i obrażeń.
-- Dodano ThePirate/Scripts/Combat/Cannon.cs, CannonPlayerInput.cs i CannonProjectile.cs: pojedynczy strzał LPM, przeładowanie, pocisk z obrażeniami i czasem życia, ignorowanie własnego kadłuba.
-- Dodano SETUP_CANNON.md; uzupełniono README.md i ARCHITECTURE.md. W tym kroku nie zmieniano sceny, prefabów, modułu zdrowia ani sterowania.
 
-- Dodano Framework/Health/Health.cs: dodatnie obrażenia, stan zdrowia, zdarzenia Changed i jednorazowe Depleted.
-- Dodano ThePirate/Scripts/Debug/HealthDebugTester.cs: menu testowe i komunikaty w Console.
-- Dodano SETUP_HEALTH.md; uaktualniono README.md i ARCHITECTURE.md. Sceny i prefab skonfigurowano później po stronie użytkownika.
+- Weryfikacja końcowa: izolowane Unity 6000.6.3f1, natywny import/kompilacja i krokowany Play Mode: PASS, 22 sprawdzenia. Objęto dwie strefy, globalny limit, poziomy/HP/baterie, JSON, stare zapisy, odtworzenie HP i tożsamości, brak duplikatów, czas odnowienia oraz jego limit. Test jawnie wywołuje AdvanceSpawning z powodu braku fokusu Game view w batch; normalna pętla zachowuje blokadę pauzy/fokusu. Wynik: enemy-spawn-runtime/unity-check/SpawnVerification/EnemySpawnRuntimeChecks.result. Slot gry użytkownika i jego sceny nie były zapisywane.
+- Poprawiono istniejącą walidację pustego obiektu upgrades tworzonego przez JsonUtility dla przeciwników; niepuste ulepszenia gracza na wrogu nadal są odrzucane.
+- Kontrolna kompilacja Roslyn po reimporcie bibliotek ujawniła niezgodność referencji BCL narzędzia kontrolnego. Weryfikację końcowych źródeł wykonano natywnym kompilatorem Unity, bez błędów.
 
-- Użytkownik potwierdził uruchomienie początkowej sceny bez błędów Console (etap 0).
-- Utworzono ShipPlayerInput, ShipMovement i TopDownCamera oraz instrukcję SETUP_SHIP_MOVEMENT.md.
-- Odczyt zapisanej sceny potwierdza PlayerShip z komponentami wejścia i ruchu oraz kamerę z TopDownCamera i przypisanym celem. Użytkownik potwierdził przygotowanie sceny testowej.
-- Dokumentacja projektu: README.md wskazuje pozostałe dokumenty, PLAN.md opisuje drogę do pojedynku, ARCHITECTURE.md zapisuje odpowiedzialności i zachowania, a ten plik śledzi postęp.
-
-## Sprawdzenia i ich zakres
-
-| Sprawdzenie | Wynik i ograniczenie |
-| --- | --- |
-| Początkowa scena w Play Mode | Według użytkownika bez błędów; przed pełnym testem nowego sterowania |
-| Kompilacja kontrolna trzech skryptów | W poprzednim kroku Roslyn z bibliotekami projektu: bez błędów; CS0649 dotyczył celu kamery przypisywanego przez Inspector |
-| Odczyt zapisanej sceny | Komponenty istnieją, pole celu kamery jest przypisane; nie dowodzi to poprawnego zachowania podczas gry |
-| Prefab statku | Istnieje Assets/ThePirate/Prefab/PlayerShip.prefab; odczyt potwierdza komponenty ShipMovement i ShipPlayerInput. Test instancji w Unity niepotwierdzony |
-| Nowe sterowanie i kamera | 2026-09-26: użytkownik potwierdził poprawne działanie. Asystent nie uruchamiał edytora; nie zgłoszono osobno aktualnego stanu Console |
-| Kod zdrowia | Kompilacja kontrolna z bibliotekami tego projektu: bez błędów |
-| Logika zdrowia | 12 asercji poza Unity: wartości niedozwolone, zwykłe trafienia, nadmiarowe obrażenia, granice int i jednorazowe zdarzenie wyczerpania, także przy obrażeniach ze zdarzenia Changed. Użyto rzeczywistego Health.cs i minimalnych zastępników API Unity; cykl życia komponentów nie był testowany |
-| Zdrowie w Play Mode | Użytkownik potwierdził działanie i przejście do kolejnego etapu; asystent nie uruchamiał Unity |
-| Kod działa | Roslyn: trzy nowe skrypty skompilowane z istniejącymi skryptami Framework i ThePirate oraz bibliotekami projektu, bez błędów. Ostrzeżenia CS0649 dotyczą referencji przypisywanych w Inspectorze |
-| Działo i pocisk w Play Mode | 2026-09-27: użytkownik potwierdził działanie. Nie przekazał osobnych wyników każdego przypadku z SETUP_CANNON.md; asystent nie uruchamiał Unity |
-| Dokumentacja | Uzupełniona o pojedyncze działo i testy pocisku |
-
-## Zgłoszone problemy
-
-Zgłoszono `Invalid AssetDatabase path` z pełną ścieżką projektu. Log wskazał `UnityEditor.ClipboardContextMenu` przy otwieraniu menu pola Inspectora. Zalecono zastąpienie zawartości schowka zwykłym tekstem i przypisywanie celu kamery z Hierarchy. Przyczyna związana z zawartością schowka pozostaje wnioskiem z logu; nie otrzymano osobnego potwierdzenia ponownego testu tego błędu. Nie zmieniano z tego powodu kodu ruchu.
-
-## Następne zadanie
-
-Zaprojektować etap 4: wybór lewej lub prawej burty kursorem, strzał LPM z przypisanych dział, równoległy lot pocisków oraz przeładowanie. Przed implementacją ustalić sposób celowania i podział komponentów. PPM pozostaje na przyszłą broń specjalną.
-
-## Sposób dopisywania wyników
-
-Po każdym zadaniu aktualizujemy bieżący etap i następny krok. Dla sprawdzeń podajemy: datę, kto wykonał test (użytkownik/asystent), co sprawdzono, wynik i ograniczenia. Rozróżniamy odczyt plików, kompilację i test w Play Mode.
-
-Publikacja: obecna aktualizacja dokumentacji jest lokalna. W tym zadaniu nie wykonano commit ani push; dostęp do zmian na innym urządzeniu wymaga osobnej synchronizacji repozytorium.
-
-## Integracja feature/ship-movement-data — 2026-09-27
-
-- Na polecenie użytkownika włączono lokalnie do main osiem commitów gałęzi, do ebadeb78ca358d892bb12c738d9b2149956fb11c (commit scalający, z zachowaniem dwóch własnych commitów main).
-- Dodano pięć skryptów w Assets/FrameWork/Runtime/Ships/Movement: ShipMovementStats, ShipCargoStats, ShipMovementState, ShipMovementInput i ShipMovementController.
-- Asystent skompilował pięć nowych skryptów narzędziem Roslyn z bibliotekami Unity 6000.6.3f1 i Input System tego projektu: bez błędów; trzy ostrzeżenia CS0649 dotyczą referencji przypisywanych w Inspectorze. Sprawdzenie różnic Git: bez błędów białych znaków.
-- Nie uruchomiono edytora ani Play Mode. Nowy kontroler nie jest podłączony do sceny lub prefabu; dotychczasowe ShipMovement i ShipPlayerInput nadal pozostają w projekcie.
-- Następny krok: import w Unity i wygenerowanie .meta, utworzenie zasobów Movement Stats i Cargo Stats, konfiguracja nowego kontrolera na obiekcie testowym oraz test W/S/A/D, hamowania i cofania. Nie należy uruchamiać starego i nowego kontrolera ruchu jednocześnie na tym samym statku.
-- Zachowano lokalne zmiany .plastic/plastic.changes i .plastic/plastic.wktree. Nie wykonano push. Niniejsza aktualizacja STATUS.md jest częścią lokalnego commitu scalającego.
-- Poniżej zachowano notatki źródłowej gałęzi jako zapis historyczny. Wskazana tam scena SampleScene i etap 1 nie zastępują bieżącego stanu projektu opisanego powyżej.
-
-### Historyczne notatki ze scalonej gałęzi
-# Stan projektu
-
-Data: 2026-09-27
-
-## Zweryfikowana baza
-
-- Repozytorium: https://github.com/luk17san/GameWorkv0.1
-- Unity: 6000.6.3f1.
-- URP: 17.6.0; Input System: 1.20.0.
-- Scena: Assets/Scenes/SampleScene.unity.
-- Framework pozostaje niezależny od Assets/ThePirate.
-
-## Aktywne zadanie
-
-Etap 1: przygotowanie systemu ruchu statku.
-
-Gałąź do przeglądu: `feature/ship-movement-data`.
-
-## Zmiany przygotowane w chmurze
-
-Dodano pierwszą warstwę danych systemu ruchu:
-
-- `Assets/FrameWork/Runtime/Ships/Movement/ShipMovementStats.cs`
-  - prędkość maksymalna, przyspieszenie i mnożnik hamowania;
-  - procentowe parametry cofania;
-  - konfigurowalne punkty zależności zwrotności od prędkości;
-  - statek zachowuje 60% domyślnej sterowności na postoju.
-- `Assets/FrameWork/Runtime/Ships/Movement/ShipCargoStats.cs`
-  - limit ładowności;
-  - blokada przekroczenia pojemności;
-  - konfigurowalny próg rozpoczęcia kar, domyślnie 40%;
-  - osobne kary prędkości i przyspieszenia przy pełnym załadunku.
-- `Assets/FrameWork/Runtime/Ships/Movement/ShipMovementState.cs`
-  - stan prędkości zadanej i rzeczywistej;
-  - efektywne osiągi;
-  - prędkość środowiskowa;
-  - stan napędu oraz przygotowanie cofania.
-
-## Weryfikacja i ograniczenia
-
-- Sprawdzono strukturę i składnię plików poza Unity.
-- Nie uruchomiono Unity ani kompilacji projektu.
-- Nie przetestowano zachowania statku w Play Mode.
-- Pliki `.meta` dla nowych folderów i skryptów muszą zostać wygenerowane przez Unity po pobraniu gałęzi, a następnie dodane do repozytorium.
-- Dodano kontroler poruszający Rigidbody, ale nie zweryfikowano go jeszcze w scenie.
-- Kierunek skrętu podczas cofania nie jest obecnie odwracany.
-
-## Dalsze zmiany przygotowane w chmurze
-
-- `ShipMovementInput.cs`
-  - korzysta z Input System i akcji Vector2;
-  - jest przeznaczony do podpięcia do istniejącej akcji `Player/Move`;
-  - nie używa starego `UnityEngine.Input`.
-- `ShipMovementController.cs`
-  - zapamiętuje prędkość po puszczeniu W;
-  - realizuje hamowanie oraz zabezpieczone cofanie;
-  - oblicza kary od ładunku i mnożniki uszkodzeń;
-  - zachowuje obracanie na postoju;
-  - przyjmuje zewnętrzną prędkość wiatru i prądów;
-  - porusza statek przez `Rigidbody.MovePosition` i `MoveRotation`.
-
-## Konfiguracja wymagana w Unity
-
-1. Dodać `ShipMovementInput` oraz `ShipMovementController` do obiektu statku.
-2. W polu Movement Action przypisać `Player/Move` z `InputSystem_Actions`.
-3. Przypisać utworzone zasoby Movement Stats i Cargo Stats.
-4. Rigidbody powinien mieć zablokowany obrót osi X i Z.
-
-## Następny krok
-
-1. Pobrać gałąź `feature/ship-movement-data` na komputer.
-2. Otworzyć projekt w Unity i pozwolić edytorowi wygenerować pliki `.meta`.
-3. Sprawdzić Console pod kątem błędów kompilacji.
-4. Utworzyć zasoby `ShipMovementStats` i `ShipCargoStats` w Inspectorze.
-5. Dodać komponenty do prostego obiektu testowego i sprawdzić W/S/A/D, utrzymywanie prędkości, obrót na postoju oraz cofanie.
-
-## Poprawka drzenia statku — 2026-09-27
-
-- Po usunieciu duplikatow komponentow uzytkownik nadal zglaszal drzenie. Zapisana scena dziedziczy jedna pare komponentow z PlayerShip.prefab; Rigidbody jest dynamiczne i ma wlaczona interpolacje.
-- ShipMovementController: dynamiczne Rigidbody porusza sie przez linearVelocity zamiast MovePosition. Skret i kierunek predkosci korzystaja ze wspolnej rotacji Rigidbody, zamiast pobierania transform.forward z wygladzanego obrazu. Wyzerowano pozostala predkosc katowa przed kontrolowanym skretem, jak w poprzednim sterowaniu. Dla kinematycznego Rigidbody pozostawiono MovePosition.
-- Parametry ladunku, przyspieszania, hamowania i cofania pozostaly bez zmian. Nie zmieniono sceny, prefabu ani kamery.
-- Asystent: kontrolna kompilacja poprawionego kontrolera z pozostalymi skryptami ruchu i bibliotekami projektu przeszla bez bledow; trzy ostrzezenia CS0649 dotycza pol przypisywanych w Inspectorze.
-- Ograniczenie: nie uruchomiono edytora ani Play Mode. Zmiana usuwa podejrzana niezgodnosc sposobu poruszania z typem Rigidbody; nie potwierdzono jeszcze ustapienia drzenia.
-- Nastepny krok: test plyniecia prosto, skretow, hamowania i cofania w ShipSandbox po ponownej kompilacji Unity. Jesli drzenie pozostanie, porownac widok nieruchomej kamery z TopDownCamera i sprawdzic czasy klatek.
-
-## Zoom kamery TopDown — 2026-09-27
-
-- Zmieniono Assets/ThePirate/Scripts/Camera/TopDownCamera.cs: kółko myszy przybliża i oddala płynnie przez Input System. Tryb jest odczytywany z Camera.orthographic: Orthographic zmienia rozmiar, Perspective odległość wzdłuż kierunku offsetu, przy stałym kącie patrzenia i FOV.
-- Zachowano śledzenie w LateUpdate. Wygładzanie pozycji celu jest oddzielone od wygładzania zoomu. Kierunek kamery nadal nie zależy od obrotu statku. Brak myszy lub celu jest obsługiwany bez błędu. Nie zmieniano scen, prefabów ani plików .meta.
-- Inspector / TopDownCamera: Zoom Speed = 2 jednostki na krok, Zoom Smooth Time = 0.15 s; Min/Max Orthographic Size = 5/40; Min/Max Perspective Distance = 8/80. Smooth Time nadal odpowiada za śledzenie. Start: Camera Size w Orthographic, długość Offset w Perspective, ograniczone do ustawionych limitów. Projection wybiera się w komponencie Camera; przełączenie trybu korzysta z osobno zapamiętanego zoomu danego trybu i nie gwarantuje identycznego kadru.
-- Asystent: kontrolna kompilacja skryptu Roslyn z bibliotekami Unity 6000.6.3f1 i Input System projektu zakończona bez błędów. Jedno ostrzeżenie CS0649 dotyczy pola Target przypisywanego w Inspectorze. To sprawdzenie kodu, nie test edytora.
-- Nie uruchomiono Unity ani Play Mode. Następny krok: w ShipSandbox przetestować kółko w obie strony i dojście do obu limitów w Orthographic oraz Perspective; podczas zoomu płynąć prosto i skręcać, sprawdzić śledzenie, stały kąt i Console. Sprawdzić również zmianę Projection oraz ponowne włączenie komponentu. Minimalną odległość dopasować do wielkości statku i Near Clipping Plane, jeśli model jest obcinany.
-- Zmiany lokalne, bez commit i push. Zachowano istniejące zmiany użytkownika; wpis dopisano do STATUS.md.
-
-## Podstawowe menu i przepływ gry — 2026-09-28
-
-- Przygotowano `GameFlow`, `PauseService`, `MainMenuView` i `PauseMenuView` w Framework oraz `PirateMenuBootstrap` i narzędzie `MenuSetupBuilder` w ThePirate.
-- Narzędzie Unity tworzy scenę MainMenu, prefab pauzy i dodaje obie sceny do listy budowania. Zachowuje istniejące zasoby menu i otwartą scenę użytkownika. `ShipSandbox` otrzymuje menu pauzy z prefabu w czasie startu.
-- Nowa gra wczytuje czystą scenę. Pauza zatrzymuje czas i dźwięk; sterowanie statkiem, strzał i zoom są blokowane, włącznie z klatką wznowienia. Powrót i wyjście z rozgrywki wymagają potwierdzenia.
-- Kontrolna kompilacja wszystkich skryptów menu i istniejących skryptów gry z bibliotekami Unity 6000.6.3f1: bez błędów. Ostrzeżenia CS0649 dotyczą pól przypisywanych przez narzędzie edytora lub Inspector.
-- 22 sprawdzenia logiki `PauseService` i `GameFlow` poza Unity przeszły; użyto rzeczywistych plików kodu i zastępników API. Nie potwierdza to integracji scen, uGUI ani Play Mode.
-- Instrukcja i test ręczny: `SETUP_MENU.md`. Scena/prefab i Play Mode wymagają potwierdzenia w Unity po imporcie.
-- Zapis, wczytywanie i ustawienia nie są częścią tego etapu. Następny krok: sprawdzenie menu w Play Mode, potem ustalenie zakresu danych zapisu i wykonanie zapisu/wczytywania.
-
-- Unity wygenerowało MainMenu.unity, PauseMenu.prefab i pliki .meta. Odczyt YAML potwierdził 7 połączeń przycisków oraz referencje skryptów, a EditorBuildSettings.asset wskazuje MainMenu jako pierwszą scenę. Kod całego etapu skompilowano bez błędów (20 ostrzeżeń o polach ustawianych w Inspectorze). Test Play Mode nadal nie został wykonany.
-
-- 2026-09-28: użytkownik potwierdził, że podstawowe menu działa w Unity. Nie przekazał osobnych wyników każdego przypadku z SETUP_MENU.md ani testu zbudowanej gry.
-
-## System baterii i obrażeń statku — 2026-09-28
-
-- Wdrożono ustalenia rozmowy „Omówienie systemu ataku”: wspólne baterie, emisja równoległych salw, celowanie kursorem, LPM, moździerz PPM/LPM, sektory, zdrowie modułów, automatyczny ostrzał, niezależna broń załogi i obrażenia kolizyjne.
-- Zachowano integrację pauzy i Input System. ShipConditionController przekazuje stan żagli/steru do istniejącego kontrolera ruchu. Nie zmieniano kodu ruchu, kamery ani menu.
-- Generator Unity przygotowuje edytowalny CombatRig na PlayerShip oraz nieruchomy CombatTestEnemy. Nowe .meta generuje Unity; stare GUID-y skryptów zachowane.
-- Kontrolna kompilacja wszystkich skryptów Framework/ThePirate z bibliotekami Unity 6000.6.3f1: bez błędów. Ostrzeżenia CS0649 dotyczą pól Inspector. Generator zawiera walidację prefabów i 40 sprawdzeń geometrii i zdrowia w Edit Mode; ich wynik zależy od uruchomienia generatora i jest zapisany w Temp/GameWorkCombatSetup.result.
-- Play Mode, fizyka kolizji, wygląd oraz strojenie balansu nie zostały potwierdzone. Instrukcja konfiguracji, ograniczenia i scenariusze: SETUP_COMBAT.md. Brak publikacji na GitHub.
-
-- Wynik importu: Unity wygenerowało PlayerShip/CombatRig, CombatTestEnemy i pliki .meta; walidacja prefabów oraz 40 sprawdzeń geometrii sektorów i zdrowia modułów w Edit Mode przeszły. Play Mode nadal niepotwierdzony.
-
-## Zapis i wczytywanie — 2026-09-28
-
-- Dodano jeden slot zapisu gry z walidacją wersji, plikiem tymczasowym i kopią `.bak` w `Application.persistentDataPath`.
-- Zapis obejmuje statek gracza i opcjonalnie przeciwnika, jeśli został umieszczony w scenie; obejmuje ich pozycję, obrót, zdrowie kadłubów/modułów, prędkość, ładunek i pozostały czas przeładowania baterii oraz moździerza. Pociski i rozpoczęte salwy nie są odtwarzane.
-- `MainMenu` otrzymuje Wczytaj, a menu pauzy Zapisz / nadpisz i Wczytaj z potwierdzeniem utraty niezapisanych zmian. Nowa gra nie kasuje pliku zapisu. Przyciski pozostają obiektami uGUI.
-- Kontrolna kompilacja całego kodu Framework/ThePirate z bibliotekami Unity 6000.6.3f1: bez błędów. 15 sprawdzeń pliku i odzyskiwania kopii poza Unity przeszło. Import UI, Play Mode i zbudowana gra wymagają osobnego potwierdzenia.
-- Test ręczny: SETUP_SAVE.md. Zmiany lokalne, bez commit i push.
-
-- Unity wygenerowało elementy zapisu w MainMenu i PauseMenu (w tym potwierdzenie wczytania podczas pauzy) oraz pliki .meta. Odczyt zapisanych zasobów potwierdził przyciski, połączenia metod i skrypty; MainMenu pozostaje pierwszą sceną. Ostatnia kontrolna kompilacja: 0 błędów. 15 sprawdzeń odczytu, nadpisania i odzyskiwania pliku przeszło poza Unity. Zapis i wczytanie rozgrywki w Play Mode oraz w zbudowanej grze nie zostały jeszcze potwierdzone.
-
-## HUD gracza — modele i adaptery, 2026-09-29
-
-- Dodano Assets/ThePirate/UI/HUD/Runtime: HudModels, PlayerHudStateStore, ShipHudAdapter,
-  PlayerHudController i PlayerHudBootstrap. Jeden pasek wytrzymałości; osobne zdarzenia
-  ruchu, ładowni, baterii, celu/celowania, minimapy, wiatru, zadania i komunikatów.
-- Adapter odczytuje istniejące systemy; bootstrap podłącza jedynego aktywnego gracza drużyny 1
-  w ShipSandbox podczas uruchomienia. Nie zmieniono zapisanych scen/prefabów ani reguł walki.
-- ShipMovementController udostępnia pojemność; WeaponBattery udostępnia liczbę luf i zapamiętany
-  czas bieżącego przeładowania. Po wczytaniu save pasek startuje od 0 na pozostały czas.
-- Wiatr i zadania oczekują danych z przyszłych systemów. Wybór celu wymaga SetTarget;
-  odczyt punktu celowania i warunków strzału jest już podłączony.
-- Asystent: kompilacja statyczna Framework/ThePirate z bibliotekami Unity 6000.6.3f1 bez błędów
-  (ostrzeżenia CS0649), 19 asercji modeli i magazynu poza Unity przeszło.
-- Import/metadane Unity oraz Play Mode niepotwierdzone. Konfiguracja i test: SETUP_HUD.md.
-- Następny krok: test adapterów w Play Mode i osobne widoki uGUI w ustalonym układzie.
-  Nie wykonano commit ani push.
-
-## HUD gracza — osobne elementy uGUI, 2026-09-29
-
-- Przygotowano generator PlayerHud.prefab i dziewięciu osobnych prefabów sekcji,
-  PNG awatara oraz obręczy steru z alfa. Napisy, paski, kontury, ornamenty i pierścienie
-  są osobnymi obiektami. Konfiguracja: SETUP_HUD_UI.md.
-- Widok subskrybuje PlayerHudStateStore i odpina zdarzenia po wyłączeniu. Bootstrap
-  podłącza jedną instancję w ShipSandbox, również gdy HUD umieszczono w scenie ręcznie.
-- Minimapa ma kamerę ortograficzną i osobne znaczniki. Wiatr i zadania oczekują źródeł danych;
-  wybór celu nadal używa SetTarget. Rodzaj napędu jest konfigurowalnym podpisem.
-- Kompilacja statyczna kodu Framework/ThePirate z bibliotekami Unity 6000.6.3f1 przeszła.
-  PNG sprawdzone pod kątem alfa. Import, budowa i podgląd prefabu: wynik zostanie dopisany.
-- Play Mode pozostaje do sprawdzenia. Nie wykonano commit/push.
-
-## Poprawka CanvasRenderer HUD — 2026-09-29
-
-- Usunięto przyczynę MissingComponentException w CircularMask: HudShapeGraphic wymaga
-  teraz CanvasRenderer, a generator dodaje go przed grafiką. Walidacja sprawdza każdy Graphic.
-- Uzupełniono 82 brakujące CanvasRenderer w dziewięciu istniejących prefabach sekcji HUD.
-  Zachowano istniejące komponenty, układ, kolory, teksty i GUID; root dziedziczy naprawione sekcje.
-- Kompilacja kontrolna bez błędów. Sprawdzenie serializacji: unikalne fileID,
-  poprawne powiązania i obecność renderera dla każdej grafiki; istniejące pola bez zmian.
-- Po imporcie wymagany ponowny start Play Mode. Instancje uruchomione przed poprawką
-  nie są dowodem naprawy. Asystent nie wykonał ponownego testu Play Mode.
-
-## AI przeciwnika — etap 1, 2026-09-30
-
-- Dodano EnemyShipAI: wykrywanie wrogiej drużyny, podejście z hamowaniem, utrzymanie odległości z marginesem, przerwanie pościgu i powrót do rejonu startowego, reakcja na utratę celu i zniszczenie. Obsługuje pauzę; otwarta woda, bez omijania przeszkód.
-- ShipMovementController otrzymał opcjonalny tryb External Control i polecenia prędkości/skrętu. Domyślne sterowanie gracza zachowane; AI korzysta ze wspólnej fizyki, ładunku i uszkodzeń. Nieodświeżane polecenia wygasają po 0.25 s.
-- Dodano narzędzie Tools > GameWork > AI > Create approach test prefab. Tworzy osobny EnemyAIApproach na podstawie CombatTestEnemy, włącza ruch i wyłącza ostrzał na czas testu. Nie nadpisuje istniejącego wyniku ani nie modyfikuje sceny.
-- Kontrolna kompilacja całego kodu Framework/ThePirate z nowymi plikami i bibliotekami Unity: 0 błędów. 14 sprawdzeń matematyki, marginesu przełączania i symulowanego hamowania przeszło poza Unity. Nie jest to test rzeczywistej fizyki ani cyklu życia Unity.
-- Import, wygenerowanie prefabu i Play Mode pozostają do sprawdzenia według SETUP_ENEMY_AI.md. Stan decyzji AI nie jest zapisywany; po wczytaniu jest wyznaczany ponownie. Nie zmieniono scen ani istniejących prefabów; .meta wygeneruje Unity.
-- Następny etap po teście ruchu: ustawianie burty i odzyskiwanie dystansu, następnie ostrzał. Bez commit/push. Kopia zmienianych plików jest w katalogu roboczym enemy-ai-stage/backup-*.
-
-## AI przeciwnika — etap 2, 2026-09-30
-
-- Rozszerzono EnemyShipAI i EnemyNavigationMath: stały wybór burty dla pościgu, wcześniejsze ustawianie burty, ruch po łuku z korektą odległości, odejście poniżej minimum i powrót z marginesem. Nowe stany PositioningBroadside, Circling i GainingDistance; istniejące wartości enum zachowane.
-- Enable Maneuvers domyślnie włączone. Istniejący EnemyAIApproach korzysta z nowego zachowania bez przebudowy. Wyłączenie pola przywraca podejście i zatrzymanie z etapu 1. Diagnostyka Target In Broadside Sector odczytuje geometrię rzeczywistych baterii wybranej burty, bez oceny możliwości strzału.
-- Kontrolna kompilacja całego Framework/ThePirate z bibliotekami Unity: 0 błędów. 31 sprawdzeń poza Unity przeszło, w tym uproszczone symulacje obu burt i odejścia. Nie sprawdzono fizyki Rigidbody, importu aktualizacji ani Play Mode. Użytkownik poprosił o etap 2; nie zgłosił osobno wyników scenariuszy etapu 1.
-- Zaktualizowano SETUP_ENEMY_AI.md. Bez zmian w scenach, prefabach, .meta, uzbrojeniu i kontrolerze ruchu. Ostrzał pozostaje wyłączony; brak omijania przeszkód, wyboru burty według uszkodzeń oraz zapisu decyzji AI.
-- Następny krok: test manewrów w Unity, potem etap 3 — ostrzał. Bez commit/push. Kopia zmienionych plików: katalog roboczy enemy-ai-stage2/backup-*.
-
-## AI przeciwnika — etap 3, 2026-09-30
-
-- EnemyShipAI wydaje polecenia TryFire tylko bateriom wybranej burty i tylko w stanie Circling. Przekazuje aktualny cel i automatic=true, zachowując istniejące reguły sektora, zasięgu, uszkodzeń, przeładowania i bezpieczeństwa luf. Interwał sprawdzania 0.2 s; Enable Weapons domyślnie włączone.
-- Dodano licznik przyjętych salw, ostatnią baterię oraz diagnostykę konfliktu z ShipAutoFire/CannonPlayerInput. Ostrzał AI nie obejmuje broni załogi, dziobu/rufy ani moździerza. Przełącznik blokuje nowe salwy, nie odwołuje rozpoczętych sekwencji/pocisków.
-- Kontrolna kompilacja Framework/ThePirate: 0 błędów. 20 sprawdzeń wyodrębnionych produkcyjnych metod wydawania poleceń przeszło poza Unity z zastępnikami komponentów. Nie jest to test fizyki, rzeczywistego przeładowania, emisji pocisków ani Play Mode. Wcześniejsze etapy nie otrzymały osobnego potwierdzenia scenariuszy testowych.
-- Uzupełniono SETUP_ENEMY_AI.md. Zachowano sceny, prefaby, .meta, reguły WeaponBattery i sterowanie. Istniejący EnemyAIApproach korzysta z aktualizacji skryptu. Brak przewidywania ruchu celu i wyboru burty według uszkodzeń.
-- Następny krok: test ostrzału i pełnego pojedynku w Unity. Bez commit/push. Kopia plików: katalog roboczy enemy-ai-stage3/backup-*.
-
-## Zdrowie i HUD przeciwnika — 2026-09-30
-
-- EnemyAIApproach ma istniejące 500 HP kadłuba w Health; zachowano wspólny zasób zdrowia i reguły obrażeń. EnemyHealthHud pokazuje nazwę, pasek kadłuba i aktualne/maksymalne HP, aktualizowane przez Changed (również przy odtworzeniu zapisu). Zero HP pokazuje ZATOPIONY.
-- EnemyHudBootstrap automatycznie podłącza widok do przeciwników (drużyny inne niż 0 i 1) w ShipSandbox, również po ich utworzeniu. HUD śledzi kamerę MainCamera, ukrywa się poza ekranem i po wyłączeniu statku; usunięcie statku usuwa widok. Grafiki nie przechwytują kliknięć.
-- Dodano generator osobnego, edytowalnego EnemyHealthHud.prefab w Resources/GameWork. Po imporcie tworzy wyłącznie brakujący prefab; menu Tools > GameWork > AI > Create enemy HUD prefab pozwala go zaznaczyć/utworzyć ręcznie. Przy braku zasobu istnieje identyczny widok awaryjny tworzony w runtime.
-- Kontrolna kompilacja całego Framework/ThePirate: 0 błędów. Kontrola kodu: CanvasRenderer tworzony przed grafikami, raycast targets wyłączone, subskrypcje odpinane. Nie przeprowadzono testu wizualnego, generacji w Unity ani Play Mode.
-- Instrukcja: SETUP_ENEMY_HUD.md. Nie zmieniano istniejących scen, prefabów, .meta ani zdrowia. Nowy prefab i metadane generuje Unity. Następny krok: sprawdzić obrażenia kadłuba, zero HP, zoom, wyłączenie/usunięcie statku i zapis/wczytanie. Bez commit/push.
-
-## Trafienia przeciwnika bez spadku HP — 2026-09-30
-
-- Użytkownik zgłosił, że pociski trafiają i znikają, ale HP nie spada. Odczyt sceny wykazał EnemyAIApproach Y=0 przy PlayerShip Y=0.5. Pociski gracza lecą około Y=1.3 (promień 0.15), a górna granica kadłuba przeciwnika wynosiła Y=1.0, więc omijały kadłub i mogły trafiać strefę załogi. Wyrównano Y przeciwnika do 0.5; jedna zmiana wartości w scenie.
-- CombatDamage.Receiver: sprawny moduł nadal otrzymuje obrażenia osobno. Zniszczony moduł nie pochłania już kolejnych trafień bez skutku — odbiorcą zostaje nadrzędny Health. Zmiana wspólna dla obu statków; nie zmieniono colliderów ani wartości obrażeń. Trafienie niszczące moduł nadal nie przekazuje nadmiaru obrażeń kadłubowi; dopiero kolejne trafienia.
-- Kompilacja kontrolna całego Framework/ThePirate: 0 błędów. Sprawdzenie różnicy sceny: wyłącznie wysokość przeciwnika. To diagnoza geometrii i kodu, nie potwierdzenie Play Mode. HUD nadal pokazuje HP kadłuba, nie modułów.
-- Test: ponownie wczytać ShipSandbox poza Play Mode, uruchomić świeżą scenę bez starego zapisu (zapis przechowuje poprzednie Y), sprawdzić Y obu statków = 0.5 i strzelać w kadłub oraz kilkukrotnie w ten sam moduł. Wynik wymaga potwierdzenia w Unity. Bez commit/push; kopia w katalogu roboczym enemy-hit-fix/backup-*.
-
-## Zatapianie przeciwnika — 2026-09-30
-
-- Dodano ShipSinking: przy 0 HP kadłuba natychmiast wyłącza collidery kadłuba/modułów, ruch, AI, uzbrojenie i wizualizację sektorów, zatrzymuje Rigidbody i przełącza je na kinematic. Następnie statek opada/przechyla się przez 3 s i znika wraz z HUD. Pauza zatrzymuje animację. Pociski już w locie pozostają aktywne.
-- CombatShip automatycznie podłącza komponent dla drużyn innych niż 0 i 1. Własne Duration/Depth/Roll można zapisać, dodając ShipSinking do prefabu poza Play Mode. Nie zmieniano scen, prefabów ani istniejących .meta; nowe .meta generuje Unity. Śmierć gracza pozostaje poza zakresem.
-- ShipCollisionDamage odrzuca zderzenia z kadłubem o 0 HP także po stronie żywego statku. Uszkodzenia żywych statków i przeszkód zachowują istniejące reguły.
-- VoyageSaveRuntime: zapis po usunięciu przeciwnika wczytuje gracza i usuwa początkowego przeciwnika ze sceny, po sprawdzeniu zgodności całego zapisu. Zapis podczas zatapiania (0 HP) usuwa przeciwnika od razu po odtworzeniu. Zapis z żywym przeciwnikiem nadal go przywraca; format v1 bez zmian.
-- Kompilacja kontrolna całego Framework/ThePirate z bibliotekami Unity: 0 błędów (ostrzeżenia CS0649 pól Inspectora). Osiem sprawdzeń wyodrębnionych produkcyjnych metod mapowania zapisu przeszło poza Unity z zastępnikami obiektów. Sprawdzono usuwanie przeciwnika, zachowanie żywego, brak wymaganego celu i brak częściowych zmian przy niezgodności. Nie jest to test serializacji dyskowej, animacji, fizyki ani cyklu życia Unity.
-- Play Mode pozostaje do sprawdzenia według SETUP_SINKING.md: kolizja z pokonanym statkiem, zatapianie, pauza, HUD i zapis/wczytanie przed/w trakcie/po zatopieniu. Bez commit/push. Kopia zmienionych plików: katalog roboczy sinking-stage/backup-*.
-
-
-## Bezpośrednie zderzenia statków — 2026-10-02
-
-- Użytkownik zatwierdził korektę obrażeń i wytracania prędkości. ShipCollisionDamage: nowy Impact Damage Multiplier = 0.1 oraz Max Impact Health Fraction = 0.25 (maksymalnie 125 HP przy kadłubie 500 HP). Zachowano próg 2 m/s, masę, mnożniki stref i odporność. Obrażenia obu statków wyliczane przed wywołaniem zdarzeń zdrowia. Cooldown pary jest wspólny, z większej wartości obu uczestników. Pozostawanie w kontakcie nie nalicza obrażeń.
-- ShipMovementController: Enter/Stay rejestrują poziome normalne kontaktu, następny FixedUpdate uwzględnia rzeczywistą prędkość Rigidbody po fizyce i usuwa składową napędu skierowaną w przeszkodę. Zmniejsza także zapamiętaną prędkość zadaną gracza w dotychczasowym kierunku; W pozwala ponownie rozpędzać się. Polecenia AI zachowane. Pociski i zatopione kadłuby pomijane; restore/disable czyszczą kontakty. Nie zmieniano scen, prefabów, .meta ani zapisu.
-- Asystent: kontrolna kompilacja aktualnego kodu runtime Framework/ThePirate z bibliotekami Unity 6000.6.3f1: 0 błędów, ostrzeżenia CS0649 dotyczą pól Inspectora. 17 sprawdzeń wyodrębnionych produkcyjnych metod przeszło poza Unity z zastępnikami API: limit/skalowanie obrażeń, prędkość po zatrzymaniu/odbiciu/cofaniu, zachowanie poleceń AI, blokada ruchu w przeszkodę i zachowanie stycznej. To nie jest symulacja fizyki ani test cyklu życia Unity.
-- Następny krok: test Play Mode według sekcji Korekta zderzeń w SETUP_COMBAT.md — czołowe uderzenie, puszczenie/przytrzymanie W, otarcie, cofanie, niska prędkość, pauza i wczytanie. Działanie w Unity niepotwierdzone. Kopia poprzednich plików: katalog roboczy collision-stage/backup-*. Bez commit/push.
-
-## Port i cumowanie — 2026-10-02
-
-- Na zatwierdzenie użytkownika przygotowano PortDock, ShipDocking i generator PortPrefabBuilder. Port obejmuje oddzielne edytowalne obiekty pomostu, lądu, słupków, punkt Berth i wizualną strefę podejścia 12 m. Brakujący prefab generuje Unity po imporcie; menu Tools > GameWork > Ports > Place port in current scene umieszcza instancję z unikalnym ID. Sceny ani istniejących prefabów nie zapisywano automatycznie. Metadane nowych skryptów/folderów i zasoby prefabu generuje Unity.
-- E cumuje/odcumowuje. Warunki: żywy gracz, prawidłowy unikalny port w tej scenie, wolne miejsce, prędkość Rigidbody i napędu <=1 m/s, brak blokady walki i przeszkód w miejscu/podejściu. Statek ustawia się na Berth, utrzymuje wysokość, zatrzymuje się i blokuje napęd oraz wszystkie ścieżki uzbrojenia. Komunikat uGUI nie przechwytuje kliknięć. Odcumowanie przywraca poprzedni tryb Rigidbody, zeruje napęd i wymaga ponownego zadania prędkości.
-- CombatShip odnawia 10 s blokady po rozpoczęciu salwy, emisji pocisku, ostrzale załogi i faktycznych obrażeniach kadłuba/modułów. Aktywny cel pościgu/walki EnemyShipAI blokuje cumowanie także przy pudłach. Salwa skierowana w cel odnawia jego blokadę. Powrót przeciwnika i jego zatopienie nie są aktywnym pościgiem; ostatnia aktywność nadal odlicza się przez 10 s czasu gry. Pauza zatrzymuje odliczanie. Ponowne zagrożenie/obrażenia zwalniają cumy, bez nietykalności portu.
-- Framework.Health otrzymał uniwersalne zdarzenie Damaged (wyłącznie faktyczne TakeDamage, bez restore). Framework nie zależy od ThePirate. Pozostałe integracje są w ThePirate: moduły, Cannon, WeaponBattery, SpecialWeaponController, CrewAutoFireSystem, wejście gracza i kontroler ruchu.
-- VoyageSaveData/VoyageSaveRuntime zapisują port ID, zacumowanie i pozostałą blokadę walki. Nowe opcjonalne pola nie zmieniają wersji v1 i umożliwiają odczyt starszych zapisów. Mapowanie portu i zgodność jego położenia są sprawdzane przed modyfikacją statków; brak/duplikat portu powoduje odmowę. Stan zacumowania odtwarzany po ruchu i zdrowiu. Port trzeba dodać i zapisać w scenie poza Play Mode.
-- Asystent: kontrolna kompilacja aktualnego runtime i Editor Framework/ThePirate z bibliotekami Unity 6000.6.3f1: 0 błędów (CS0649 dotyczy pól Inspectora). 28 sprawdzeń produkcyjnej logiki z zastępnikami Unity przeszło poza edytorem: faktyczne obrażenia vs restore, zgodność starego/nowego zapisu i błędne stany, odliczanie/odnawianie walki, pościg bez trafień, zwalnianie cum, warunki prędkości, zajętości, przeszkody, sceny i identyfikatora. Nie testowano fizyki ani pełnej serializacji/load w Unity.
-- Instrukcja i scenariusze: SETUP_PORT.md. Generacja/import prefabu, wygląd oraz Play Mode pozostają niepotwierdzone. Następny krok: umieścić port menu, zapisać ShipSandbox i sprawdzić E, blokadę walki, odcumowanie i save/load. Bez handlu/napraw/ekranu portu. Kopia plików przed integracją: katalog roboczy port-stage/backup-*. Bez commit/push.
-## Woda w ShipSandbox — 2026-10-03
-
-- Po zatwierdzeniu użytkownika poprawiono istniejący obiekt Sea/water: MeshFilter używa siatki WaterBlock_50m (1951 wierzchołków) zamiast wbudowanego Plane. Skala X/Z = 20 zachowuje powierzchnię około 1000 × 1000 m; pozycja Y = 0 i materiał RealisticOcean pozostają zachowane. Fale są efektem wizualnym shaderu, bez symulacji wyporności.
-- Wyłączono MeshCollider wody oraz Cast Shadows. Woda nie stanowi przeszkody dla statków/pocisków. Wyłączony stary WaterBlock_50m pozostaje wyłączony. Nie zmieniono shaderu, materiału, statków, prefabów ani ustawień URP.
-- Kontrola pliku sceny: zmieniono dokładnie cztery wartości w trzech komponentach i transformacji; referencje siatki i materiału odpowiadają istniejącym .meta. PC_RPAsset ma włączoną Depth Texture wymaganą przez shader. Celowanie ShipCombatController używa matematycznej płaszczyzny, więc nie wymaga collidera wody.
-- Nie przeprowadzono importu, kompilacji shaderu ani Play Mode w Unity. Następny krok: ponownie otworzyć ShipSandbox z dysku poza Play Mode, sprawdzić wodę przy różnych poziomach zoomu oraz ruch i ostrzał. Mobile_RPAsset ma wyłączoną Depth Texture; ustawień mobilnych nie zmieniano w tym etapie.
-- Kopia sceny i poprzedniego STATUS.md: C:\Users\Użytkownik\Documents\ChatGPT\GameWorkv0.1\water-stage\backup-20261003-201724. Bez commit/push.
-## Moździerz — 2026-10-03
-
-- Na polecenie użytkownika rozwinięto istniejący SpecialWeaponController/Cannon/CannonProjectile: PPM celuje, LPM zatwierdza (istniejące wejście), wysoki łuk, eksplozja przy kontakcie/przecięciu powierzchni wody i dodatkowy spherecast przebytej drogi. Cel zostaje ustalony przy strzale.
-- Eksplozja domyślnie rani tylko wrogów, raz na kadłub, ze spadkiem obrażeń do krawędzi. Osobne Damage Allies/Damage Owner w Inspectorze. Neutralne obiekty bez obrażeń. Zachowano blokady dokowania, modułu oraz zapis przeładowania.
-- Zaktualizowano wyłącznie parametry moździerza w PlayerShip.prefab: 20–100 m, 100 obrażeń, promień 6 m, reload 15 s, minimum wysokości łuku 25 m. Flight Time 3 jest minimum, rzeczywisty czas domyślny około 4.5 s. Scena i niezwiązane zmiany zachowane.
-- Kompilacja kontrolna aktualnego runtime i Editor z bibliotekami projektu: 0 błędów, CS0649 dla pól Inspectora. Nie uruchomiono Unity ani Play Mode. Brak nowego VFX; opcjonalny Impact Effect w istniejącym prefabie pocisku. Pociski w locie nie są zapisywane.
-- Następny krok: scenariusze Play Mode w SETUP_MORTAR.md. Kopia poprzednich plików w mortar-stage/backup-*. Bez commit/push.
-
-## Przeładowanie broni specjalnej w HUD — 2026-10-03
-
-- Dodano piąty HudBatteryWidget Special po prawej stronie schematu statku (100,0), z podpisem MOŹDZIERZ. Zachowano cztery dotychczasowe wskaźniki i ich położenie. Zmiany w istniejących ReloadShip.prefab/PlayerHud.prefab; edytowalne uGUI i istniejące meta zachowane.
-- ShipHudAdapter przekazuje stan SpecialWeaponController: czas pozostały i pełny czas przeładowania, gotowość niezależną od punktu celowania, zaznaczenie podczas celowania i zniszczenie modułu. Korzysta z istniejących snapshotów/zdarzeń HUD. Brak broni pokazuje kreskę; dokowanie blokuje gotowość. Pauza i wczytanie używają rzeczywistego stanu przeładowania moździerza.
-- Zaktualizowano generator i wartości podglądu. Kompilacja kontrolna runtime i Editor: 0 błędów. Kontrola prefabów: pięć wskaźników, poprawne lokalne referencje, CanvasRenderer dla grafik, raycast targets wyłączone, istniejące obiekty HUD zachowane.
-- Nie uruchomiono Unity/Play Mode ani podglądu wizualnego w edytorze. Następny krok: sprawdzić MOŹDZIERZ po prawej stronie HUD, strzał i odliczanie 15 s, postęp, gotowość, PPM, pauzę i save/load. Bez commit/push. Kopia poprzednich plików w special-hud-stage/backup-*.
-
-## Znacznik moździerza na środku HUD statku — 2026-10-03
-
-- Na polecenie użytkownika przeniesiono istniejący Special z (100,0) do (0,0) schematu statku w ReloadShip.prefab. Kompaktowy pierścień (około 25 px), licznik 8 px, podpis MOŹDZIERZ pod wskaźnikiem (0,-32). Cztery pozostałe wskaźniki, referencje, timer i meta zachowane. Generator tworzy ten sam układ.
-- Kompilacja kontrolna generatora z runtime/Editor: bez błędów. Kontrola prefabów potwierdza zachowanie pozostałych obiektów i identyfikatorów. Nie uruchomiono Unity ani Play Mode; czytelność przy różnych rozdzielczościach wymaga sprawdzenia.
-- Następny krok: sprawdzić środkowy wskaźnik w HUD i odliczanie po strzale. Bez commit/push. Kopia plików w mortar-marker-stage/backup-*.
-
-## Widoczność zasięgów ponad wodą — 2026-10-03
-
-- FireRangeVisualizer rysuje sektory oraz okrąg moździerza 0.65 m ponad Water Height z ShipCombatController (nowa właściwość tylko do odczytu). Poprzednie wysokości 0.12/0.15 m były niższe niż bieżące fale materiału RealisticOcean, Wave Height 0.477.
-- Materiał znaczników ma renderQueue 3100, po wodzie Transparent/3000. Zachowano istniejący shader Sprites/Default i jego test głębokości; nie włączano rysowania przez wyspy/budynki. Inspector / FireRangeVisualizer: Surface Offset i Indicator Render Queue do dostosowania przy zmianie wody.
-- Kompilacja kontrolna runtime i Editor z bibliotekami projektu: bez błędów. Bez zmian w materiale wody, scenie, prefabach, colliderach, celowaniu, obrażeniach i meta. Nie uruchomiono Unity ani Play Mode; widoczność i zasłanianie wymagają sprawdzenia w edytorze.
-- Następny krok: w ShipSandbox sprawdzić sektory po wyjściu z PPM, okrąg podczas PPM, fale i zoom, oraz zasłanianie przez wyspę/budynek. Show Sectors musi być włączone; podczas celowania moździerzem sektory są celowo ukryte. Kopia poprzednich plików w range-water-fix/backup-*. Bez commit/push.

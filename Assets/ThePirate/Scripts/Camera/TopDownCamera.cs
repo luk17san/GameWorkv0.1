@@ -37,6 +37,12 @@ namespace ThePirate.Cameras
         private Vector3 OffsetDirection => offset.sqrMagnitude > 0.001f
             ? offset.normalized : Vector3.up;
 
+        public void RetargetIfFollowing(Transform previous, Transform current)
+        {
+            if (target == null || previous == null || !target.IsChildOf(previous)) return;
+            target = current; followVelocity = Vector3.zero; hasFollowPosition = false;
+        }
+
         private void OnEnable()
         {
             attachedCamera = GetComponent<Camera>();

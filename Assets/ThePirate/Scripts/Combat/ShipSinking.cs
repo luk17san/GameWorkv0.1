@@ -41,6 +41,7 @@ namespace ThePirate.Combat
         {
             if (sinking || !hull.IsDepleted || ship.Team == 0 || ship.Team == 1) return;
             sinking = true;
+            ThePirate.VFX.CombatVFXLink.Ensure(ship).Sinking();
             origin = transform.position;
             rotation = transform.rotation;
             foreach (var collider in GetComponentsInChildren<Collider>(true)) collider.enabled = false;

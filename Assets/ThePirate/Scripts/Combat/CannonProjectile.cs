@@ -46,21 +46,24 @@ namespace ThePirate.Combat
                 if (projectile != this && projectile.owner == owner && projectile.hitCollider != null) Physics.IgnoreCollision(hitCollider, projectile.hitCollider);
             body.useGravity = gravity;
             body.linearVelocity = transform.forward * Mathf.Max(0.1f, speed);
+            ThePirate.VFX.CombatVFXLink.Trail(transform);
             Destroy(gameObject, Mathf.Max(0.1f, lifetime));
         }
         private void OnCollisionEnter(Collision collision)
         {
             if (!launched || hasHit || (owner != null && collision.transform.IsChildOf(owner))) return;
-            Impact(collision.collider);
+            var contact = collision.GetContact(0);
+            Impact(collision.collider, contact.point, contact.normal);
         }
         private void FixedUpdate()
         {
-            if (!launched || hasHit || Ammunition != AmmunitionKind.Mortar) return;
+            if (!launched || hasHit || !body.useGravity) return;
             Vector3 current = body.position;
             Vector3 delta = current - previousPosition;
             float nearest = float.PositiveInfinity;
             Collider obstruction = null;
             Vector3 contact = current;
+            Vector3 normal = Vector3.up;
             float radius = hitCollider.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.y), Mathf.Abs(transform.lossyScale.z));
             if (delta.sqrMagnitude > 0.000001f)
                 foreach (var hit in Physics.SphereCastAll(previousPosition, radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
@@ -70,7 +73,7 @@ namespace ThePirate.Combat
                     if (other != null && other.owner == owner) continue;
                     if (hit.distance >= nearest) continue;
                     nearest = hit.distance; obstruction = hit.collider;
-                    contact = previousPosition + delta.normalized * hit.distance;
+                    contact = hit.point; normal = hit.normal;
                 }
             // Woda nie potrzebuje collidera. Wybieramy pierwsze trafienie na odcinku.
             if (body.linearVelocity.y < 0f && current.y <= waterHeight)
@@ -78,12 +81,12 @@ namespace ThePirate.Combat
                 float fraction = previousPosition.y > waterHeight ? (previousPosition.y - waterHeight) / (previousPosition.y - current.y) : 0f;
                 Vector3 surface = Vector3.Lerp(previousPosition, current, fraction);
                 surface.y = waterHeight;
-                if (Vector3.Distance(previousPosition, surface) < nearest) { contact = surface; obstruction = null; nearest = 0f; }
+                if (Vector3.Distance(previousPosition, surface) < nearest) { contact = surface; normal = Vector3.up; obstruction = null; nearest = 0f; }
             }
-            if (!float.IsPositiveInfinity(nearest)) { body.position = contact; transform.position = contact; Impact(obstruction); }
+            if (!float.IsPositiveInfinity(nearest)) { body.position = contact; transform.position = contact; Impact(obstruction, contact, normal); }
             previousPosition = current;
         }
-        private void Impact(Collider direct)
+        private void Impact(Collider direct, Vector3 point, Vector3 normal)
         {
             hasHit = true; hitCollider.enabled = false; body.linearVelocity = Vector3.zero;
             if (blastRadius > 0)
@@ -107,6 +110,7 @@ namespace ThePirate.Combat
                 }
             }
             else if (direct != null) CombatDamage.Apply(CombatDamage.Receiver(direct), damage);
+            ThePirate.VFX.CombatVFXLink.Impact(direct, point, normal, Ammunition == AmmunitionKind.Mortar);
             if (impactEffect != null) Destroy(Instantiate(impactEffect, transform.position, Quaternion.identity), 5f);
             Destroy(gameObject);
         }

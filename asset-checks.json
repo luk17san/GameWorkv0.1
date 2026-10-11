@@ -1,0 +1,51 @@
+[
+  {
+    "Name": "button-navy.png",
+    "Width": 2172,
+    "Height": 724,
+    "CornerAlpha": 0,
+    "Bytes": 1486565
+  },
+  {
+    "Name": "button-red.png",
+    "Width": 2172,
+    "Height": 724,
+    "CornerAlpha": 1,
+    "Bytes": 1246034
+  },
+  {
+    "Name": "harbor-background.png",
+    "Width": 1672,
+    "Height": 941,
+    "CornerAlpha": 255,
+    "Bytes": 2954598
+  },
+  {
+    "Name": "icons-atlas.png",
+    "Width": 1448,
+    "Height": 1086,
+    "CornerAlpha": 0,
+    "Bytes": 865940
+  },
+  {
+    "Name": "outer-frame.png",
+    "Width": 1672,
+    "Height": 941,
+    "CornerAlpha": 0,
+    "Bytes": 973516
+  },
+  {
+    "Name": "parchment-panel.png",
+    "Width": 1024,
+    "Height": 1536,
+    "CornerAlpha": 0,
+    "Bytes": 2856939
+  },
+  {
+    "Name": "ship-portrait.png",
+    "Width": 1448,
+    "Height": 1086,
+    "CornerAlpha": 0,
+    "Bytes": 1969789
+  }
+]

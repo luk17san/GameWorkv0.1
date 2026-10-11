@@ -13,6 +13,7 @@ namespace ThePirate.Save
     public static class VoyageSaveRuntime
     {
         private static VoyageSaveData pending;
+        public static bool LoadPending => pending != null;
         public static string LastLoadError { get; private set; }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -76,28 +77,49 @@ namespace ThePirate.Save
                 error = "Zapis wymaga statku gracza i co najwyżej jednego przeciwnika w tej scenie.";
                 return false;
             }
+            var playerCargo = ThePirate.Economy.ShipCargo.Ensure(FindTeam(ships, 1));
+            if (playerCargo == null || !playerCargo.TryGetInventory(out _, out error))
+            {
+                error = error ?? "Brak ładowni gracza.";
+                return false;
+            }
+            if (!ThePirate.Economy.ShipUpgrades.Ensure(FindTeam(ships, 1)).TryCapture(out _, out error)) return false;
+            var identity = ThePirate.Ships.ShipIdentity.Ensure(FindTeam(ships, 1));
+            var catalog = ThePirate.Ships.ShipCatalog.Load();
+            if (catalog == null) { error = "Brak katalogu statków."; return false; }
+            if (!catalog.TryFind(identity.TypeId, out _, out error)) return false;
             data = new VoyageSaveData
             {
+                gold = ThePirate.Economy.PlayerGold.Ensure(FindTeam(ships, 1)).Balance,
                 scenePath = PirateMenuBootstrap.GameplayScene,
                 savedAtUtc = DateTime.UtcNow.ToString("o"),
+                floatingLoot = ThePirate.Economy.FloatingLoot.CaptureScene(SceneManager.GetActiveScene()),
                 ships = new ShipSaveData[ships.Length]
             };
             for (int i = 0; i < ships.Length; i++) data.ships[i] = CaptureShip(ships[i]);
+            ThePirate.Spawning.EnemySpawnDirector.Ensure(SceneManager.GetActiveScene()).Capture(out data.spawnSlots, out data.spawnedEnemies);
             if (ValidData(data)) return true;
             data = null;
             error = "Stan statków jest niepoprawny; gra nie została zapisana.";
             return false;
         }
 
-        private static ShipSaveData CaptureShip(CombatShip ship)
+        public static ShipSaveData CaptureShip(CombatShip ship)
         {
             var movement = ship.GetComponent<ShipMovementController>();
             var modules = ship.GetComponentsInChildren<ShipDamageModule>(true);
             var batteries = ship.GetComponentsInChildren<WeaponBattery>(true);
             var special = ship.GetComponent<SpecialWeaponController>();
+            Framework.Inventory.CargoInventory inventory = null;
+            if (ship.Team == 1) ThePirate.Economy.ShipCargo.Ensure(ship).TryGetInventory(out inventory, out _);
+            ThePirate.Economy.ShipUpgradeState upgradeState = null;
+            if (ship.Team == 1) ThePirate.Economy.ShipUpgrades.Ensure(ship).TryCapture(out upgradeState, out _);
             var saved = new ShipSaveData
             {
                 team = ship.Team,
+                shipTypeId = ship.Team == 1 ? ThePirate.Ships.ShipIdentity.Ensure(ship).TypeId : null,
+                shipInstanceId = ship.Team == 1 ? ThePirate.Ships.ShipIdentity.Ensure(ship).InstanceId : null,
+                upgrades = upgradeState,
                 docked = ship.IsDocked,
                 portId = ship.GetComponent<ShipDocking>()?.PortId,
                 combatRemaining = ship.CombatRemaining,
@@ -108,7 +130,10 @@ namespace ThePirate.Save
                 requestedSpeed = movement.State.RequestedTargetSpeed,
                 currentSpeed = movement.State.CurrentPropulsionSpeed,
                 reverseArmed = movement.State.ReverseArmed,
-                cargoWeight = movement.CurrentCargoWeight,
+                cargoWeight = inventory != null ? inventory.TotalWeight : movement.CurrentCargoWeight,
+                hasCargoInventory = inventory != null,
+                legacyCargoWeight = inventory != null ? inventory.LegacyWeight : 0f,
+                cargo = inventory != null ? inventory.Snapshot() : null,
                 externalVelocity = movement.State.ExternalVelocity,
                 hasSpecialWeapon = special != null,
                 specialReloadRemaining = special != null ? special.ReloadRemaining : 0f,
@@ -147,47 +172,78 @@ namespace ThePirate.Save
         {
             error = null;
             CombatShip[] ships = CurrentShips(scene);
-            if (!ValidSceneShips(ships) || !ValidData(data))
+            if (!ValidSceneShips(ships) || !ValidData(data)) { error = "Zapis nie pasuje do obecnej sceny."; return false; }
+            CombatShip originalPlayer = FindTeam(ships, 1);
+            CombatShip prepared = null;
+            var director = ThePirate.Spawning.EnemySpawnDirector.Ensure(scene);
+            var preparedEnemies = new List<ThePirate.Spawning.SpawnedEnemy>();
+            bool enemiesCommitted = false;
+            try
             {
-                error = "Zapis nie pasuje do obecnej sceny.";
-                return false;
-            }
-            // Całe mapowanie sprawdzamy przed zmianą pierwszego obiektu.
-            foreach (ShipSaveData saved in data.ships)
-            {
-                CombatShip ship = FindTeam(ships, saved.team);
-                if (ship == null || !CanApply(ship, saved))
+                ShipSaveData playerData = Array.Find(data.ships, saved => saved.team == 1);
+                if (!string.IsNullOrEmpty(playerData.shipTypeId))
                 {
-                    error = "Zmienił się układ statku lub jego modułów. Zapis nie został zastosowany.";
-                    return false;
+                    var catalog = ThePirate.Ships.ShipCatalog.Load();
+                    if (catalog == null) { error = "Brak katalogu statków."; return false; }
+                    if (!catalog.TryFind(playerData.shipTypeId, out var definition, out error)) return false;
+                    if (!ThePirate.Ships.ShipReplacement.TryPrepare(definition, scene, playerData.position, playerData.rotation, out prepared, out error)) return false;
+                    ThePirate.Ships.ShipIdentity.Ensure(prepared).Configure(playerData.shipTypeId, playerData.shipInstanceId);
+                    for (int i = 0; i < ships.Length; i++) if (ships[i] == originalPlayer) ships[i] = prepared;
                 }
-            }
-            foreach (ShipSaveData saved in data.ships) ApplyShip(FindTeam(ships, saved.team), saved);
-            // A player-only save represents a voyage after the enemy was removed.
-            // Validate all saved ships first, then remove the scene's initial enemy.
-            if (data.ships.Length == 1)
-            {
-                CombatShip enemy = FindTeam(ships, 2);
-                if (enemy != null)
+                // Wszystkie statki mapujemy przed zmianą starego gracza, złota lub przeciwnika.
+                foreach (ShipSaveData saved in data.ships)
                 {
-                    enemy.gameObject.SetActive(false);
-                    UnityEngine.Object.Destroy(enemy.gameObject);
+                    CombatShip ship = FindTeam(ships, saved.team);
+                    if (ship == null || !CanApply(ship, saved, originalPlayer.GetComponent<ShipDocking>()))
+                    { error = "Zapis nie pasuje do projektu, ulepszeń, modułów, ładowni lub portu."; return false; }
                 }
+                if (!director.TryPrepareRestore(data.spawnSlots, data.spawnedEnemies, out preparedEnemies, out error)) return false;
+                if (prepared != null)
+                {
+                    if (!ThePirate.Ships.ShipReplacement.TryCommit(originalPlayer, prepared, null, out error)) return false;
+                    prepared = null;
+                }
+                ThePirate.Economy.PlayerGold.Ensure(FindTeam(ships, 1)).Wallet.TryRestore(data.gold);
+                foreach (ShipSaveData saved in data.ships) ApplyShip(FindTeam(ships, saved.team), saved);
+                ThePirate.Economy.FloatingLoot.RestoreScene(scene, data.floatingLoot);
+                director.CommitRestore(data.spawnSlots, data.spawnedEnemies, preparedEnemies);
+                enemiesCommitted = true;
+                if (data.ships.Length == 1)
+                {
+                    CombatShip enemy = FindTeam(ships, 2);
+                    if (enemy != null) { enemy.gameObject.SetActive(false); UnityEngine.Object.Destroy(enemy.gameObject); }
+                }
+                return true;
             }
-            return true;
+            finally
+            {
+                if (prepared != null) ThePirate.Ships.ShipReplacement.Discard(prepared);
+                if (!enemiesCommitted) foreach (var enemy in preparedEnemies) if (enemy != null) enemy.RetireWithoutReward();
+            }
         }
 
-        private static bool CanApply(CombatShip ship, ShipSaveData saved)
+        public static bool CanApply(CombatShip ship, ShipSaveData saved, ShipDocking originalDocking = null)
         {
-            if (ship.Hull == null || ship.Hull.MaxHealth != saved.hullMaxHealth
+            if (ship.Hull == null || (saved.team != 1 && ship.Hull.MaxHealth != saved.hullMaxHealth)
                 || ship.GetComponent<ShipMovementController>() == null
                 || (ship.GetComponent<SpecialWeaponController>() != null) != saved.hasSpecialWeapon) return false;
+            if (saved.team == 1)
+            {
+                var upgrades = ThePirate.Economy.ShipUpgrades.Ensure(ship);
+                if (!upgrades.CanRestore(saved.upgrades, out int maximum, out _) || maximum != saved.hullMaxHealth) return false;
+                var cargo = ThePirate.Economy.ShipCargo.Ensure(ship);
+                if (cargo == null || !cargo.TryGetInventory(out var inventory, out _)) return false;
+                var stacks = saved.hasCargoInventory ? saved.cargo : new Framework.Inventory.ResourceStack[0];
+                float legacyWeight = saved.hasCargoInventory ? saved.legacyCargoWeight : saved.cargoWeight;
+                if (!inventory.CanRestore(stacks, legacyWeight, out float weight, out _)
+                    || Mathf.Abs(weight - saved.cargoWeight) > 0.001f) return false;
+            }
             if (saved.docked)
             {
                 PortDock port = PortDock.Find(ship.gameObject.scene, saved.portId);
                 Vector3 delta = port != null ? port.Berth.position - saved.position : Vector3.one;
                 delta.y = 0f;
-                if (port == null || delta.sqrMagnitude > 0.01f || ship.GetComponent<ShipDocking>() == null || !port.AvailableFor(ship.GetComponent<ShipDocking>())) return false;
+                if (port == null || delta.sqrMagnitude > 0.01f || ship.GetComponent<ShipDocking>() == null || !port.AvailableFor(originalDocking ?? ship.GetComponent<ShipDocking>())) return false;
             }
             var modules = ship.GetComponentsInChildren<ShipDamageModule>(true);
             var batteries = ship.GetComponentsInChildren<WeaponBattery>(true);
@@ -204,9 +260,10 @@ namespace ThePirate.Save
             return true;
         }
 
-        private static void ApplyShip(CombatShip ship, ShipSaveData saved)
+        public static void ApplyShip(CombatShip ship, ShipSaveData saved)
         {
             ship.GetComponent<ShipDocking>()?.Undock();
+            if (saved.team == 1) ThePirate.Economy.ShipUpgrades.Ensure(ship).TryRestore(saved.upgrades, out _);
             Rigidbody body = ship.GetComponent<Rigidbody>();
             if (body != null)
             {
@@ -220,7 +277,16 @@ namespace ThePirate.Save
                 ship.transform.SetPositionAndRotation(saved.position, saved.rotation);
             }
             var movement = ship.GetComponent<ShipMovementController>();
-            movement.SetCargoWeight(saved.cargoWeight);
+            if (saved.team == 1)
+            {
+                var cargo = ThePirate.Economy.ShipCargo.Ensure(ship);
+                cargo.TryGetInventory(out var inventory, out _);
+                inventory.TryRestore(saved.hasCargoInventory ? saved.cargo : new Framework.Inventory.ResourceStack[0],
+                    saved.hasCargoInventory ? saved.legacyCargoWeight : saved.cargoWeight, out _);
+                // Również identyczny/pusty stan ma poprawną masę po wczytaniu.
+                movement.SetCargoWeight(inventory.TotalWeight);
+            }
+            else movement.SetCargoWeight(saved.cargoWeight);
             movement.RestoreMotion(saved.requestedSpeed, saved.currentSpeed,
                 saved.reverseArmed, saved.externalVelocity);
             var moduleMap = new Dictionary<string, ShipDamageModule>();
@@ -244,7 +310,7 @@ namespace ThePirate.Save
         {
             var result = new List<CombatShip>();
             foreach (CombatShip ship in CombatShip.ActiveShips)
-                if (ship != null && ship.gameObject.scene == scene) result.Add(ship);
+                if (ship != null && ship.gameObject.scene == scene && ship.GetComponent<ThePirate.Spawning.SpawnedEnemy>() == null) result.Add(ship);
             return result.ToArray();
         }
 
@@ -280,14 +346,29 @@ namespace ThePirate.Save
         private static bool Finite(Vector3 value) => Finite(value.x) && Finite(value.y) && Finite(value.z);
         private static bool ValidData(VoyageSaveData data)
         {
-            if (data == null || data.version != 1 || data.scenePath != PirateMenuBootstrap.GameplayScene
+            if (data == null || !ThePirate.Economy.FloatingLoot.Valid(data.floatingLoot) || data.version != 1 || data.gold < 0 || data.scenePath != PirateMenuBootstrap.GameplayScene
                 || data.ships == null || data.ships.Length < 1 || data.ships.Length > 2) return false;
             bool player = false, enemy = false;
-            foreach (ShipSaveData ship in data.ships)
+            if (!ValidSpawnData(data)) return false;
+            var allShips = new List<ShipSaveData>(data.ships);
+            var dynamicShips = new HashSet<ShipSaveData>();
+            if (data.spawnedEnemies != null) foreach (var record in data.spawnedEnemies) { allShips.Add(record.ship); dynamicShips.Add(record.ship); }
+            foreach (ShipSaveData ship in allShips)
             {
-                if (ship == null || (ship.team != 1 && ship.team != 2)) return false;
+                bool dynamicEnemy = dynamicShips.Contains(ship);
+                if (ship == null || (dynamicEnemy ? ship.team < 2 : (ship.team != 1 && ship.team != 2))) return false;
+                // JsonUtility materializes a null nested class as an empty object.
+                // Enemies may carry that empty placeholder, but never player upgrades.
+                if (ship.upgrades != null && (!ship.upgrades.Valid || (ship.team != 1 &&
+                    (ship.upgrades.Any || !string.IsNullOrEmpty(ship.upgrades.effectsSignature))))) return false;
+                if (!string.IsNullOrEmpty(ship.shipTypeId))
+                {
+                    if (ship.team != 1 || !Framework.Inventory.ResourceDefinition.ValidId(ship.shipTypeId)
+                        || !Guid.TryParseExact(ship.shipInstanceId, "N", out _)) return false;
+                }
+                else if (!string.IsNullOrEmpty(ship.shipInstanceId)) return false;
                 if (ship.team == 1) { if (player) return false; player = true; }
-                if (ship.team == 2) { if (enemy) return false; enemy = true; }
+                if (ship.team == 2 && !dynamicEnemy) { if (enemy) return false; enemy = true; }
                 if (!Finite(ship.position) || !Finite(ship.externalVelocity)
                     || !Finite(ship.rotation.x) || !Finite(ship.rotation.y)
                     || !Finite(ship.rotation.z) || !Finite(ship.rotation.w)
@@ -304,6 +385,16 @@ namespace ThePirate.Save
                     || ship.modules.Length > 64 || ship.batteries.Length > 32) return false;
                 if (!Finite(ship.combatRemaining) || ship.combatRemaining < 0f || ship.combatRemaining > 3600f) return false;
                 if (ship.docked && (ship.team != 1 || ship.hullHealth <= 0 || string.IsNullOrWhiteSpace(ship.portId) || ship.portId.Length > 128 || ship.combatRemaining > 0f || Mathf.Abs(ship.requestedSpeed) > 0.01f || Mathf.Abs(ship.currentSpeed) > 0.01f || ship.externalVelocity.sqrMagnitude > 0.0001f)) return false;
+                if (!Finite(ship.legacyCargoWeight) || ship.legacyCargoWeight < 0f) return false;
+                if (ship.hasCargoInventory)
+                {
+                    if (ship.team != 1 || ship.cargo == null || ship.cargo.Length > 1024) return false;
+                    var ids = new HashSet<string>();
+                    foreach (var stack in ship.cargo)
+                        if (stack == null || !Framework.Inventory.ResourceDefinition.ValidId(stack.resourceId)
+                            || stack.quantity <= 0 || !ids.Add(stack.resourceId)) return false;
+                }
+                else if (ship.legacyCargoWeight != 0f || (ship.cargo != null && ship.cargo.Length != 0)) return false;
                 var paths = new HashSet<string>();
                 foreach (ModuleSaveData module in ship.modules)
                     if (module == null || string.IsNullOrEmpty(module.path) || !paths.Add(module.path)
@@ -316,6 +407,35 @@ namespace ThePirate.Save
                         || battery.reloadRemaining > 3600f) return false;
             }
             return player && (data.ships.Length == 1 || enemy);
+        }
+
+        private static bool ValidSpawnData(VoyageSaveData data)
+        {
+            if (data.spawnSlots == null && data.spawnedEnemies == null) return true;
+            if (data.spawnSlots == null || data.spawnedEnemies == null || data.spawnSlots.Length > 4096 || data.spawnedEnemies.Length > 256) return false;
+            var keys = new Dictionary<string, ThePirate.Spawning.SpawnSlotSave>();
+            foreach (var s in data.spawnSlots)
+            {
+                if (s == null || string.IsNullOrEmpty(s.zoneId) || s.zoneId.Length > 128 || s.group < 0 || s.slot < 0 || s.respawns < 0
+                    || !Finite(s.remaining) || s.remaining < 0 || s.remaining > 86400) return false;
+                string key = s.zoneId + ":" + s.group + ":" + s.slot;
+                if (keys.ContainsKey(key)) return false;
+                keys.Add(key, s);
+            }
+            var ids = new HashSet<string>(); var occupied = new HashSet<string>();
+            foreach (var e in data.spawnedEnemies)
+            {
+                if (e == null || e.ship == null || e.ship.hullHealth <= 0 || e.level < 1 || e.level > 1000
+                    || !Guid.TryParseExact(e.instanceId, "N", out _) || !ids.Add(e.instanceId) || !Finite(e.home)
+                    || string.IsNullOrEmpty(e.profileName) || e.profileName.Length > 256 || string.IsNullOrEmpty(e.prefabName)
+                    || !Finite(e.hullMultiplier) || e.hullMultiplier <= 0 || e.hullMultiplier > 10
+                    || !Finite(e.damageMultiplier) || e.damageMultiplier <= 0 || e.damageMultiplier > 10
+                    || !Finite(e.reloadMultiplier) || e.reloadMultiplier < .1f || e.reloadMultiplier > 10
+                    || !Finite(e.speedMultiplier) || e.speedMultiplier <= 0 || e.speedMultiplier > 10) return false;
+                string key = e.zoneId + ":" + e.group + ":" + e.slot;
+                if (!keys.TryGetValue(key, out var state) || !state.started || state.exhausted || !occupied.Add(key)) return false;
+            }
+            return true;
         }
     }
 }

@@ -13,7 +13,11 @@ namespace ThePirate.Ports
         [SerializeField] private Transform berth;
         [SerializeField, Min(1f)] private float approachRadius = 12f;
         [SerializeField, Min(0f)] private float maximumDockSpeed = 1f;
+        [SerializeField, Min(1)] private int hullRepairGoldPerHealth = 1;
+        [SerializeField, Min(1)] private int moduleRepairGoldPerHealth = 1;
         private ShipDocking occupant;
+        public int HullRepairGoldPerHealth => hullRepairGoldPerHealth;
+        public int ModuleRepairGoldPerHealth => moduleRepairGoldPerHealth;
         public string Id => portId;
         public string DisplayName => displayName;
         public Transform Berth => berth != null ? berth : transform;

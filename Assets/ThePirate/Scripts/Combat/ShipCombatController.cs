@@ -24,7 +24,7 @@ namespace ThePirate.Combat
             float best = float.MaxValue;
             foreach (var battery in Batteries)
             {
-                if (!battery.isActiveAndEnabled || !battery.Contains(AimPoint)) continue;
+                if (!battery.CanFire(AimPoint)) continue;
                 float angle = battery.Alignment(AimPoint);
                 if (angle < best) { best = angle; Selected = battery; }
             }

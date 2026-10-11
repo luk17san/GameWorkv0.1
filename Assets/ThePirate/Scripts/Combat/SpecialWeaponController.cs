@@ -9,9 +9,13 @@ namespace ThePirate.Combat
         [SerializeField] private ShipDamageModule condition;
         [SerializeField, Min(1)] private float minimumRange = 20f;
         [SerializeField, Min(1)] private float maximumRange = 100f;
+        [Tooltip("Minimalny czas lotu na maksymalny zasięg; wysokość dalekiego łuku może go zwiększyć.")]
         [SerializeField, Min(0.1f)] private float flightTime = 3f;
+        [Tooltip("Czas lotu na minimalny zasięg. Bliski cel otrzymuje niższy łuk.")]
+        [SerializeField, Min(0.1f)] private float closeFlightTime = 1.25f;
         [SerializeField, Min(0.1f)] private float reloadTime = 15f;
         [SerializeField, Min(1)] private int damage = 100;
+        [Tooltip("Minimalna wysokość łuku przy maksymalnym zasięgu, dla końców toru na tej samej wysokości.")]
         [SerializeField, Min(1f)] private float minimumArcHeight = 25f;
         [SerializeField] private bool damageAllies;
         [SerializeField] private bool damageOwner;
@@ -41,13 +45,23 @@ namespace ThePirate.Combat
         public void Cancel() { Aiming = false; hasTarget = false; }
         public void SetAim(Vector3 point, bool valid) { target = point; hasTarget = valid; }
         private void OnDisable() => Cancel();
+        // Wspólne rozwiązanie balistyczne dla podglądu i rzeczywistego strzału.
+        public bool TryGetTrajectory(out Vector3 origin, out Vector3 velocity, out float duration)
+        {
+            origin = mortar != null ? mortar.Muzzle.position : transform.position;
+            velocity = Vector3.zero; duration = 0f;
+            if (!hasTarget || mortar == null || Physics.gravity.y >= -0.01f) return false;
+            float distance = Vector3.Distance(transform.position, target);
+            float rangeFraction = Mathf.InverseLerp(minimumRange, Mathf.Max(minimumRange + 0.01f, maximumRange), distance);
+            float farDuration = Mathf.Max(Mathf.Max(0.1f, flightTime), Mathf.Sqrt(8f * minimumArcHeight / -Physics.gravity.y));
+            duration = Mathf.Lerp(Mathf.Clamp(closeFlightTime, 0.1f, farDuration), farDuration, rangeFraction);
+            velocity = (target - origin - 0.5f * Physics.gravity * duration * duration) / duration;
+            return true;
+        }
         public bool TryFire()
         {
             if (!Aiming || !ValidTarget || Time.timeScale <= 0) return false;
-            if (Physics.gravity.y >= -0.01f) return false;
-            // Dłuższy lot zapewnia wysoki łuk także przy większym zasięgu.
-            float duration = Mathf.Max(Mathf.Max(0.1f, flightTime), Mathf.Sqrt(8f * minimumArcHeight / -Physics.gravity.y));
-            Vector3 velocity = (target - mortar.Muzzle.position - 0.5f * Physics.gravity * duration * duration) / duration;
+            if (!TryGetTrajectory(out _, out Vector3 velocity, out float duration)) return false;
             if (!mortar.Emit(velocity.normalized, damage, velocity.magnitude, duration + 5f, AmmunitionKind.Mortar, true, blastRadius, damageAllies, damageOwner, target.y)) return false;
             nextFire = Time.time + reloadTime; Cancel(); return true;
         }

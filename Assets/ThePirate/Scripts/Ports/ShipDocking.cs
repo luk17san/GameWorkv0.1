@@ -63,7 +63,9 @@ namespace ThePirate.Ports
             else if (!ClearApproach(port)) reason = "Podejście lub miejsce przy pomoście jest zablokowane.";
             return reason == null;
         }
-        private bool ClearApproach(PortDock port)
+        public bool ClearBerthForReplacement(PortDock port, Transform ignoredShip)
+        { return port != null && ClearApproach(port, ignoredShip); }
+        private bool ClearApproach(PortDock port, Transform ignoredShip = null)
         {
             var hull = GetComponent<BoxCollider>();
             if (hull == null) return false;
@@ -72,12 +74,12 @@ namespace ThePirate.Ports
             half = new Vector3(Mathf.Abs(half.x), Mathf.Abs(half.y), Mathf.Abs(half.z)) * 0.98f;
             Vector3 center = destination + port.Berth.rotation * Vector3.Scale(hull.center, transform.lossyScale);
             foreach (var hit in Physics.OverlapBox(center, half, port.Berth.rotation, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform)) return false;
+                if (!hit.transform.IsChildOf(transform) && (ignoredShip == null || !hit.transform.IsChildOf(ignoredShip))) return false;
             Vector3 start = transform.TransformPoint(hull.center);
             Vector3 delta = destination - body.position;
             if (delta.sqrMagnitude > 0.001f)
                 foreach (var hit in Physics.BoxCastAll(start, half, delta.normalized, body.rotation, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                    if (!hit.transform.IsChildOf(transform)) return false;
+                    if (!hit.transform.IsChildOf(transform) && (ignoredShip == null || !hit.transform.IsChildOf(ignoredShip))) return false;
             return true;
         }
         private void Attach(PortDock port)
@@ -105,6 +107,7 @@ namespace ThePirate.Ports
         public void Undock()
         {
             if (dock == null) { movement?.SetMoored(false); return; }
+            global::Framework.Menu.PauseService.SuppressGameplayInputThisFrame();
             PortDock previous = dock; dock = null; previous.Release(this);
             body.isKinematic = previousKinematic;
             movement.SetMoored(false); movement.RestoreMotion(0f, 0f, false, Vector3.zero);

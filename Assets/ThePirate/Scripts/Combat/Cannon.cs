@@ -30,6 +30,7 @@ namespace ThePirate.Combat
             if (ship != null && !ship.WeaponsAllowed) return false;
             var projectile = Instantiate(projectilePrefab, Muzzle.position, Quaternion.LookRotation(direction));
             projectile.Launch(owner, damage, speed, lifetime, ammunition, gravity, radius, damageAllies, damageOwner, waterHeight);
+            ThePirate.VFX.CombatVFXLink.Shot(this);
             if (ship != null) ship.RecordCombat();
             return true;
         }

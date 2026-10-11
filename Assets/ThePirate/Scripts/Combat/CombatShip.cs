@@ -55,8 +55,17 @@ namespace ThePirate.Combat
             Hull = GetComponent<Health>();
             Hull.Damaged += DamageReceived;
             ShipDocking.Ensure(this);
+            ThePirate.Economy.PlayerGold.Ensure(this);
+            ThePirate.Economy.ShipCargo.Ensure(this);
+            ThePirate.Economy.ShipLootCollector.Ensure(this);
+            ThePirate.Economy.ShipUpgrades.Ensure(this);
+            ThePirate.Ships.ShipIdentity.Ensure(this);
+            ThePirate.Ships.ShipyardService.Ensure(this);
+            PortMenuController.Ensure(this);
+            ThePirate.Economy.ShipGoldReward.Ensure(this);
+            ThePirate.Economy.ShipResourceReward.Ensure(this);
         }
-        private void Start() => ShipSinking.Ensure(this);
+        private void Start() { ShipSinking.Ensure(this); ThePirate.VFX.CombatVFXLink.Ensure(this); }
         private void OnEnable() => ships.Add(this);
         private void OnDisable() => ships.Remove(this);
         private void OnDestroy() { if (Hull != null) Hull.Damaged -= DamageReceived; }

@@ -7,15 +7,23 @@ namespace ThePirate.Save
     public sealed class VoyageSaveData
     {
         public int version = 1;
+        // Opcjonalne pole v1: starsze zapisy otrzymują saldo 0.
+        public int gold;
         public string scenePath;
         public string savedAtUtc;
         public ShipSaveData[] ships;
+        public ThePirate.Spawning.SpawnSlotSave[] spawnSlots;
+        public ThePirate.Spawning.SpawnEnemySave[] spawnedEnemies;
+        public ThePirate.Economy.FloatingLootData[] floatingLoot;
     }
 
     [Serializable]
     public sealed class ShipSaveData
     {
         public int team;
+        public string shipTypeId;
+        public string shipInstanceId;
+        public ThePirate.Economy.ShipUpgradeState upgrades;
         public bool docked;
         public string portId;
         public float combatRemaining;
@@ -27,6 +35,9 @@ namespace ThePirate.Save
         public float currentSpeed;
         public bool reverseArmed;
         public float cargoWeight;
+        public bool hasCargoInventory;
+        public float legacyCargoWeight;
+        public Framework.Inventory.ResourceStack[] cargo;
         public Vector3 externalVelocity;
         public ModuleSaveData[] modules;
         public BatterySaveData[] batteries;

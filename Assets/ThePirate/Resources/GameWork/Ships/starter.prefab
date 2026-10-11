@@ -1,0 +1,1567 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &189099915946984804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233929974968220071}
+  - component: {fileID: 3983095925450426253}
+  - component: {fileID: 7048629774755261491}
+  - component: {fileID: 6063439166441154541}
+  m_Layer: 0
+  m_Name: BowBattery
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1233929974968220071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189099915946984804}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8, z: 7.895425}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1789493692205319920}
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3983095925450426253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189099915946984804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 0
+  maxHealth: 100
+  currentHealth: 100
+--- !u!114 &7048629774755261491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189099915946984804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
+  minimumRange: 8
+  maximumRange: 80
+  firingArc: 70
+  damage: 25
+  projectileSpeed: 35
+  reloadTime: 6
+  spread: 0.5
+  salvoDelay: {x: 0.001, y: 0.01}
+  ammunition: 0
+--- !u!65 &6063439166441154541
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189099915946984804}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 0.4, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1139140382115174682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1789493692205319920}
+  - component: {fileID: 6654903562974051024}
+  m_Layer: 0
+  m_Name: Muzzle_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1789493692205319920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139140382115174682}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1233929974968220071}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6654903562974051024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139140382115174682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 1789493692205319920}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &1840521169781037429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6390496227029532224}
+  - component: {fileID: 114339356830187388}
+  m_Layer: 0
+  m_Name: MortarMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6390496227029532224
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840521169781037429}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.5, z: 1.2103648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6688809421893236227}
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114339356830187388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840521169781037429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 0
+  maxHealth: 100
+  currentHealth: 100
+--- !u!1 &3100458456404488457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4223920434964809623}
+  - component: {fileID: 1033397949771691279}
+  m_Layer: 0
+  m_Name: Muzzle_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4223920434964809623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100458456404488457}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.052789, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7597260954564898883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1033397949771691279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100458456404488457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 4223920434964809623}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &3335676991783924829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1665052933764170758}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1665052933764170758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335676991783924829}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7949253078731535365}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3453680704591571022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6688809421893236227}
+  - component: {fileID: 4185144302556307141}
+  m_Layer: 0
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6688809421893236227
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453680704591571022}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6390496227029532224}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4185144302556307141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453680704591571022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 6688809421893236227}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &3536971291995184306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 814550689907194890}
+  - component: {fileID: 8374594322464071187}
+  - component: {fileID: 1566518199845657937}
+  - component: {fileID: 8340013250893511807}
+  m_Layer: 0
+  m_Name: SternBattery
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &814550689907194890
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536971291995184306}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  m_LocalPosition: {x: 0, y: 0.8, z: -5.474695}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 726518872471397673}
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8374594322464071187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536971291995184306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 0
+  maxHealth: 100
+  currentHealth: 100
+--- !u!114 &1566518199845657937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536971291995184306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
+  minimumRange: 8
+  maximumRange: 80
+  firingArc: 70
+  damage: 25
+  projectileSpeed: 35
+  reloadTime: 6
+  spread: 0.5
+  salvoDelay: {x: 0.001, y: 0.01}
+  ammunition: 0
+--- !u!65 &8340013250893511807
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3536971291995184306}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.8, y: 0.4, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3650589096226455268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3534402657185420846}
+  m_Layer: 0
+  m_Name: CombatRig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3534402657185420846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3650589096226455268}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2707685590645414280}
+  - {fileID: 7597260954564898883}
+  - {fileID: 1233929974968220071}
+  - {fileID: 814550689907194890}
+  - {fileID: 6390496227029532224}
+  - {fileID: 5168818382989836971}
+  - {fileID: 6236858830269263352}
+  m_Father: {fileID: 6925438441721837514}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4029890618591844627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 726518872471397673}
+  - component: {fileID: 7716253681377984423}
+  m_Layer: 0
+  m_Name: Muzzle_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &726518872471397673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4029890618591844627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 814550689907194890}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7716253681377984423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4029890618591844627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 726518872471397673}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &4051145761557358115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3267637738276484791}
+  - component: {fileID: 2889481303618158961}
+  m_Layer: 0
+  m_Name: Muzzle_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3267637738276484791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051145761557358115}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.052789, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2707685590645414280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2889481303618158961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051145761557358115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 3267637738276484791}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &4686772770477839863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7949253078731535365}
+  - component: {fileID: 8393858311017114492}
+  m_Layer: 0
+  m_Name: TestCannon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7949253078731535365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4686772770477839863}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1665052933764170758}
+  m_Father: {fileID: 6925438441721837514}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8393858311017114492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4686772770477839863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 1665052933764170758}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &4783548708233849662
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6236858830269263352}
+  - component: {fileID: 207377197096426575}
+  - component: {fileID: 9185046430946967531}
+  m_Layer: 0
+  m_Name: CrewDamageZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6236858830269263352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783548708233849662}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 1.2103648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &207377197096426575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783548708233849662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 2
+  maxHealth: 100
+  currentHealth: 100
+--- !u!65 &9185046430946967531
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783548708233849662}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7387499, y: 0.5, z: 6.23506}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5813439555038486345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5378242959426766955}
+  - component: {fileID: 4833819985416085206}
+  m_Layer: 0
+  m_Name: Muzzle_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5378242959426766955
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813439555038486345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3509296, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7597260954564898883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4833819985416085206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5813439555038486345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 5378242959426766955}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &5926778211057638610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5084437080236745983}
+  - component: {fileID: 5867525080155086602}
+  m_Layer: 0
+  m_Name: Muzzle_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5084437080236745983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5926778211057638610}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3509299, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7597260954564898883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5867525080155086602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5926778211057638610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 5084437080236745983}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &6170148084873102387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7597260954564898883}
+  - component: {fileID: 6745691099387744076}
+  - component: {fileID: 1247849483117338943}
+  - component: {fileID: 7486010240781613625}
+  m_Layer: 0
+  m_Name: RightBroadside
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7597260954564898883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170148084873102387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 2.1887498, y: 0.8, z: 1.2103648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2033193312333501318}
+  - {fileID: 5378242959426766955}
+  - {fileID: 5084437080236745983}
+  - {fileID: 4223920434964809623}
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6745691099387744076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170148084873102387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 0
+  maxHealth: 100
+  currentHealth: 100
+--- !u!114 &1247849483117338943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170148084873102387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
+  minimumRange: 8
+  maximumRange: 80
+  firingArc: 70
+  damage: 25
+  projectileSpeed: 35
+  reloadTime: 6
+  spread: 0.5
+  salvoDelay: {x: 0.001, y: 0.01}
+  ammunition: 0
+--- !u!65 &7486010240781613625
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6170148084873102387}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.23506, y: 0.4, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6334777660687509170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6925438441721837514}
+  - component: {fileID: 7092204046630098568}
+  - component: {fileID: 1813214210399970367}
+  - component: {fileID: 3958335004470561077}
+  - component: {fileID: 3795889625005640310}
+  - component: {fileID: 6991400290543514481}
+  - component: {fileID: 7615605977834174707}
+  - component: {fileID: 8105775004114467118}
+  - component: {fileID: 7829730680124016087}
+  - component: {fileID: 8707913165158140959}
+  - component: {fileID: 784882848275636732}
+  - component: {fileID: 8964000026103836448}
+  - component: {fileID: 7203932685546460382}
+  - component: {fileID: 5460747166424130859}
+  - component: {fileID: 4119940473165971351}
+  - component: {fileID: 2795440434949232780}
+  m_Layer: 0
+  m_Name: starter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6925438441721837514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.5, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3989151826547895943}
+  - {fileID: 7949253078731535365}
+  - {fileID: 3534402657185420846}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &7092204046630098568
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  serializedVersion: 5
+  m_Mass: 1000
+  m_LinearDamping: 0
+  m_AngularDamping: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 84
+  m_CollisionDetection: 2
+--- !u!65 &1813214210399970367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.4774997, y: 1.4, z: 12.47012}
+  m_Center: {x: 0, y: 0.3, z: 1.2103648}
+--- !u!114 &3958335004470561077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a3a083f3bd1bb4b9587b59f6618a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameWork.Framework.Ships.Movement.ShipMovementInput
+  movementAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+--- !u!114 &3795889625005640310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe13b17054d50545850d72aa781d5fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameWork.Framework.Ships.Movement.ShipMovementController
+  movementStats: {fileID: 11400000, guid: 1b2f4f5a057f27e48b41e2131555a14c, type: 2}
+  cargoStats: {fileID: 11400000, guid: 108ef872b762c0f44ae24681840261b1, type: 2}
+  state:
+    requestedTargetSpeed: 0
+    allowedTargetSpeed: 0
+    currentPropulsionSpeed: 0
+    effectiveMaxSpeed: 0
+    effectiveAcceleration: 0
+    currentTurnEfficiency: 0
+    externalVelocity: {x: 0, y: 0, z: 0}
+    finalVelocity: {x: 0, y: 0, z: 0}
+    driveState: 0
+    reverseArmed: 0
+  currentCargoWeight: 0
+  speedCondition: 1
+  accelerationCondition: 1
+  steeringCondition: 1
+  externalControl: 0
+--- !u!114 &6991400290543514481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f0d8d5e563ed848a93d8b1ed3fdc7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Framework.Health.Health
+  maxHealth: 500
+--- !u!114 &7615605977834174707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3785077025cce446899e62a3ff3a4e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.CombatShip
+  team: 1
+  lightlyArmored: 1
+  dockingCombatDelay: 10
+--- !u!114 &8105775004114467118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b7c64af6618a9439579794ca6afd52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipCombatController
+  aimCamera: {fileID: 0}
+  waterHeight: 0
+--- !u!114 &7829730680124016087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d7e6af567559849804fcc2dda4f369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.CannonPlayerInput
+--- !u!114 &8707913165158140959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bea8185f00da7a44a1dbdb2495efa02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipCollisionDamage
+  safeSpeed: 2
+  damageScale: 0.02
+  impactDamageMultiplier: 0.1
+  maxImpactHealthFraction: 0.25
+  pairCooldown: 0.75
+  hullResistance: 1
+  bowAttack: 1.5
+  sideAttack: 0.6
+  sternAttack: 0.5
+--- !u!114 &784882848275636732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6a2c3e762312d4dae9d553985f3c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipAutoFire
+  automaticFire: 0
+  scanInterval: 0.25
+--- !u!114 &8964000026103836448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912ea34da9fbf284fbe8b1349308ac1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.CrewAutoFireSystem
+  range: 18
+  reloadTime: 2
+  damage: 4
+  firePoint: {fileID: 0}
+  crewHealth: {fileID: 207377197096426575}
+--- !u!114 &7203932685546460382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ab2ab42702ec4f4e8e1ee82416b017f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipConditionController
+--- !u!114 &5460747166424130859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 057d187442dc91c4ba67c1fb8f91e915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.FireRangeVisualizer
+  showSectors: 1
+  surfaceOffset: 0.65
+  indicatorRenderQueue: 3100
+--- !u!114 &4119940473165971351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c3578d8f715dff489c9cd1ac16e4dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.SpecialWeaponController
+  mortar: {fileID: 4185144302556307141}
+  condition: {fileID: 114339356830187388}
+  minimumRange: 20
+  maximumRange: 100
+  flightTime: 3
+  reloadTime: 15
+  damage: 100
+  minimumArcHeight: 25
+  damageAllies: 0
+  damageOwner: 0
+  blastRadius: 6
+--- !u!114 &2795440434949232780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334777660687509170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a70142e7013a994dbc9b2defea75301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Ships.ShipIdentity
+  typeId: starter
+--- !u!1 &6444792495319221864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2033193312333501318}
+  - component: {fileID: 5259769011690312509}
+  m_Layer: 0
+  m_Name: Muzzle_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2033193312333501318
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6444792495319221864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.052789, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7597260954564898883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5259769011690312509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6444792495319221864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 2033193312333501318}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &6656426758360582445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8341556853062605103}
+  - component: {fileID: 8303629398439551002}
+  m_Layer: 0
+  m_Name: Muzzle_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8341556853062605103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6656426758360582445}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.052789, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2707685590645414280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8303629398439551002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6656426758360582445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 8341556853062605103}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &7019052781509120876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3863839368561315927}
+  - component: {fileID: 896893764411428913}
+  m_Layer: 0
+  m_Name: Muzzle_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3863839368561315927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7019052781509120876}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.3509299, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2707685590645414280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &896893764411428913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7019052781509120876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 3863839368561315927}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &7174349616216285374
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2707685590645414280}
+  - component: {fileID: 101905611831625694}
+  - component: {fileID: 680446407377233816}
+  - component: {fileID: 5874659747984064307}
+  m_Layer: 0
+  m_Name: LeftBroadside
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2707685590645414280
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174349616216285374}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -2.1887498, y: 0.8, z: 1.2103648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8341556853062605103}
+  - {fileID: 8838991789831961932}
+  - {fileID: 3863839368561315927}
+  - {fileID: 3267637738276484791}
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &101905611831625694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174349616216285374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 0
+  maxHealth: 100
+  currentHealth: 100
+--- !u!114 &680446407377233816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174349616216285374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
+  minimumRange: 8
+  maximumRange: 80
+  firingArc: 70
+  damage: 25
+  projectileSpeed: 35
+  reloadTime: 6
+  spread: 0.5
+  salvoDelay: {x: 0.001, y: 0.01}
+  ammunition: 0
+--- !u!65 &5874659747984064307
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7174349616216285374}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.23506, y: 0.4, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7682381098324720762
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8838991789831961932}
+  - component: {fileID: 3277959102825409942}
+  m_Layer: 0
+  m_Name: Muzzle_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8838991789831961932
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7682381098324720762}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.3509296, y: 0, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2707685590645414280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3277959102825409942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7682381098324720762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b79a08614a768478b06e3e6a9353cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.Cannon
+  owner: {fileID: 6925438441721837514}
+  firePoint: {fileID: 8838991789831961932}
+  projectilePrefab: {fileID: 598556565653870718, guid: a22aa31809290754e812ed46643c6aa3, type: 3}
+--- !u!1 &8714257678920427840
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5168818382989836971}
+  - component: {fileID: 606426891533013487}
+  - component: {fileID: 7030381449851396909}
+  m_Layer: 0
+  m_Name: SailsDamageZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5168818382989836971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8714257678920427840}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4, z: 1.2103648}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3534402657185420846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &606426891533013487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8714257678920427840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf890bc891d59724bbff01e5a36655ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
+  kind: 1
+  maxHealth: 100
+  currentHealth: 100
+--- !u!65 &7030381449851396909
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8714257678920427840}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7387499, y: 3, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &466048549872109706
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6925438441721837514}
+    m_Modifications:
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4206428504335203511, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+      propertyPath: m_Name
+      value: SmallSlavicShip
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+--- !u!4 &3989151826547895943 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3543185964703311373, guid: 03dd751aa23a9404cb497249e7c9039d, type: 3}
+  m_PrefabInstance: {fileID: 466048549872109706}
+  m_PrefabAsset: {fileID: 0}

@@ -35,9 +35,27 @@ namespace GameWork.Framework.Ships.Movement
         private float lastNavigationCommand = float.NegativeInfinity;
 
         public bool ExternalControl => externalControl;
+        private float upgradeSpeed = 1f, upgradeAcceleration = 1f;
+        public float BaseForwardSpeed => movementStats != null ? movementStats.MaxForwardSpeed : 0f;
+        public float BaseAcceleration => movementStats != null ? movementStats.Acceleration : 0f;
+        private float spawnSpeedMultiplier = 1f;
+        public void SetSpawnSpeedMultiplier(float value)
+        {
+            if (!float.IsNaN(value) && !float.IsInfinity(value) && value > 0f && value <= 10f) spawnSpeedMultiplier = value;
+        }
+        public float UpgradedForwardSpeed => BaseForwardSpeed * upgradeSpeed * spawnSpeedMultiplier;
+        public float UpgradedAcceleration => BaseAcceleration * upgradeAcceleration;
+        public bool SetUpgradeMultipliers(float speed, float acceleration)
+        {
+            if (float.IsNaN(speed) || float.IsInfinity(speed) || speed < 1f || speed > 2f
+                || float.IsNaN(acceleration) || float.IsInfinity(acceleration) || acceleration < 1f || acceleration > 2f) return false;
+            upgradeSpeed = speed; upgradeAcceleration = acceleration;
+            if (movementStats != null) CalculateEffectiveStats();
+            return true;
+        }
         public bool HasMovementConfiguration => movementStats != null;
         public float BrakingDeceleration => movementStats == null ? 0f :
-            movementStats.Acceleration * accelerationCondition *
+            UpgradedAcceleration * accelerationCondition *
             (cargoStats == null ? 1f : cargoStats.GetAccelerationMultiplier(currentCargoWeight)) *
             movementStats.BrakingMultiplier;
 
@@ -184,7 +202,7 @@ namespace GameWork.Framework.Ships.Movement
                 {
                     requestedSpeed = Mathf.MoveTowards(
                         requestedSpeed,
-                        movementStats.MaxForwardSpeed,
+                        UpgradedForwardSpeed,
                         acceleration * Time.deltaTime);
                 }
             }
@@ -201,8 +219,8 @@ namespace GameWork.Framework.Ships.Movement
                     state.SetReverseArmed(false);
                     requestedSpeed = Mathf.MoveTowards(
                         requestedSpeed,
-                        -movementStats.MaxReverseSpeed,
-                        movementStats.ReverseAcceleration * Time.deltaTime);
+                        -UpgradedForwardSpeed * movementStats.MaxReverseSpeedRatio,
+                        UpgradedAcceleration * movementStats.ReverseAccelerationRatio * Time.deltaTime);
                 }
                 else
                 {
@@ -224,7 +242,7 @@ namespace GameWork.Framework.Ships.Movement
         {
             return state.EffectiveAcceleration > 0f
                 ? state.EffectiveAcceleration
-                : movementStats.Acceleration;
+                : UpgradedAcceleration;
         }
 
         private void CalculateEffectiveStats()
@@ -236,10 +254,10 @@ namespace GameWork.Framework.Ships.Movement
                 ? 1f
                 : cargoStats.GetAccelerationMultiplier(currentCargoWeight);
 
-            float effectiveMaxSpeed = movementStats.MaxForwardSpeed *
+            float effectiveMaxSpeed = UpgradedForwardSpeed *
                                       speedCondition *
                                       cargoSpeedMultiplier;
-            float effectiveAcceleration = movementStats.Acceleration *
+            float effectiveAcceleration = UpgradedAcceleration *
                                           accelerationCondition *
                                           cargoAccelerationMultiplier;
 
