@@ -17,7 +17,7 @@ namespace ThePirate.Combat
         [SerializeField, Range(0.5f, 6f)] private float mobileWidthPixels = 2f;
         [SerializeField, Range(0f, 8f)] private float glowPixels = 2f;
         private GameObject overlay;
-        internal Camera ViewCamera => indicatorCamera != null ? indicatorCamera : Camera.main;
+        internal Camera ViewCamera => indicatorCamera != null ? indicatorCamera : combat != null ? combat.AimCamera : Camera.main;
         internal float WidthPixels => Application.isMobilePlatform ? mobileWidthPixels : desktopWidthPixels;
         internal float GlowPixels => glowPixels;
         private ShipCombatController combat;
@@ -26,19 +26,13 @@ namespace ThePirate.Combat
         private LineRenderer[][] batteryTrajectories;
         private LineRenderer circle;
         private LineRenderer trajectory;
-        private Material material;
         private void Start()
         {
             combat = GetComponent<ShipCombatController>(); special = GetComponent<SpecialWeaponController>();
-            var shader = Shader.Find("Sprites/Default");
-            if (shader == null) { enabled = false; return; }
-            material = new Material(shader);
             overlay = new GameObject("Aim lines overlay", typeof(RectTransform), typeof(Canvas));
             var canvas = overlay.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = -10;
-            // Rysuj po przezroczystej wodzie. Shader nadal sprawdza głębokość sceny.
-            material.renderQueue = indicatorRenderQueue;
             lines = new LineRenderer[combat.Batteries.Length];
             batteryTrajectories = new LineRenderer[lines.Length][];
             for (int i = 0; i < lines.Length; i++)
@@ -61,16 +55,17 @@ namespace ThePirate.Combat
         private LineRenderer MakeLine(string label)
         {
             var go = new GameObject(label); go.transform.SetParent(transform, false);
-            var line = go.AddComponent<LineRenderer>(); line.sharedMaterial = material;
+            var line = go.AddComponent<LineRenderer>();
             line.useWorldSpace = true; line.widthMultiplier = 0.08f; line.loop = true; line.positionCount = 258;
             line.forceRenderingOff = true;
-            var graphicObject = new GameObject(label, typeof(RectTransform), typeof(AimLineGraphic));
+            var graphicObject = new GameObject(label, typeof(RectTransform), typeof(CanvasRenderer), typeof(AimLineGraphic));
             graphicObject.transform.SetParent(overlay.transform, false);
             var rect = (RectTransform)graphicObject.transform;
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
             rect.offsetMin = rect.offsetMax = Vector2.zero;
             var graphic = graphicObject.GetComponent<AimLineGraphic>();
             graphic.Source = line; graphic.Owner = this; graphic.raycastTarget = false;
+            graphic.SetAllDirty();
             return line;
         }
         private void LateUpdate()
@@ -81,10 +76,13 @@ namespace ThePirate.Combat
                 var battery = combat.Batteries[i]; var line = lines[i];
                 bool selectedReady = combat.HasAim && combat.Selected == battery && battery.Ready
                     && !(special != null && special.Aiming);
+                // Widoczność zależy od kierunku znacznika, bez ograniczenia jego odległości.
+                Vector3 aimDirection = Vector3.ProjectOnPlane(combat.AimPoint - battery.transform.position, Vector3.up);
                 line.enabled = showSectors && combat.HasAim && !(special != null && special.Aiming)
-                    && (selectedReady || (combat.Selected != null && battery.Ready));
+                    && battery.Ready && aimDirection.sqrMagnitude > 0.001f
+                    && battery.Alignment(combat.AimPoint) <= battery.FiringArc * 0.5f;
                 Color color = selectedReady ? new Color(1f, 0.78f, 0.36f, 0.48f)
-                    : new Color(0.78f, 0.85f, 0.9f, 0.08f);
+                    : new Color(0.78f, 0.85f, 0.9f, 0.22f);
                 line.startColor = line.endColor = color;
                 for (int c = 0; c < batteryTrajectories[i].Length; c++)
                 {
@@ -132,6 +130,24 @@ namespace ThePirate.Combat
             }
         }
         private void OnEnable() { if (overlay != null) overlay.SetActive(true); }
+        [ContextMenu("Diagnostyka linii celowania")]
+        private void Diagnose()
+        {
+            if (!Application.isPlaying) { Debug.Log("Diagnostyka linii wymaga Play Mode.", this); return; }
+            int ready = 0, visibleLines = 0, vertices = 0;
+            if (combat != null && combat.Batteries != null)
+                foreach (var battery in combat.Batteries) if (battery != null && battery.Ready) ready++;
+            if (overlay != null)
+                foreach (var graphic in overlay.GetComponentsInChildren<AimLineGraphic>())
+                {
+                    if (graphic.Source != null && graphic.Source.enabled) visibleLines++;
+                    var mesh = graphic.canvasRenderer.GetMesh();
+                    if (mesh != null) vertices += mesh.vertexCount;
+                }
+            Debug.Log($"Aim lines: camera={ViewCamera}, HasAim={combat != null && combat.HasAim}, " +
+                $"Selected={combat?.Selected}, ready batteries={ready}, enabled lines={visibleLines}, " +
+                $"UI vertices={vertices}, overlay active={overlay != null && overlay.activeInHierarchy}", this);
+        }
         private void OnDisable()
         {
             if (overlay != null) overlay.SetActive(false);
@@ -140,7 +156,7 @@ namespace ThePirate.Combat
             if (circle != null) circle.enabled = false;
             if (trajectory != null) trajectory.enabled = false;
         }
-        private void OnDestroy() { if (material != null) Destroy(material); if (overlay != null) Destroy(overlay); }
+        private void OnDestroy() { if (overlay != null) Destroy(overlay); }
     }
 }
 

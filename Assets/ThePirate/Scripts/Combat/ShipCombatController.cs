@@ -11,6 +11,7 @@ namespace ThePirate.Combat
         public Vector3 AimPoint { get; private set; }
         public bool HasAim { get; private set; }
         public float WaterHeight => waterHeight;
+        public Camera AimCamera => aimCamera != null ? aimCamera : Camera.main;
         public WeaponBattery Selected { get; private set; }
         private void Awake() => Batteries = GetComponentsInChildren<WeaponBattery>();
         public void Aim(Vector2 screenPoint)

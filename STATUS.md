@@ -136,3 +136,29 @@
 - Poprawiono istniejącą walidację pustego obiektu upgrades tworzonego przez JsonUtility dla przeciwników; niepuste ulepszenia gracza na wrogu nadal są odrzucane.
 - Kontrolna kompilacja Roslyn po reimporcie bibliotek ujawniła niezgodność referencji BCL narzędzia kontrolnego. Weryfikację końcowych źródeł wykonano natywnym kompilatorem Unity, bez błędów.
 
+
+### 2026-10-11 - Ustawienia widocznego spawnu w WybrzezeTrzechSosen
+- Obie strefy: Obstacle Mask = Default (1), activationDistance = 500, despawnDistance = 800, minimumPlayerDistance = 50, spawnInterval = 1, requireOutsideCamera = false.
+- Wysokosc punktow glownej strefy i losowania w kopii = 0.5 m. Zachowano profile, grupy i polozenie stref.
+- Test w aktywnym Unity 6000.6.3f1: Play Mode uruchomiony; po 5 sekundach hierarchia zawierala dwa aktywne EnemyAIApproach Lv.1/Lv.2 z komponentem SpawnedEnemy. Obraz Game View pokazal statki na wodzie. Zakonczono Play Mode.
+- Kopia sceny przed zmiana oraz HierarchyPlay.json i GameView.png: projekt ChatGPT/GameWorkv0.1/enemy-spawn-settings-fix. Nie potwierdzono jeszcze pelnej obsady obu stref ani respawnu po smierci.
+
+
+## Korekta niewidocznych linii — 2026-10-12
+- FireRangeVisualizer: gotowe sektory widoczne także gdy HasAim=true, Selected=null (cel poza sektorem/zablokowany). Trajektorie nadal tylko rzeczywiście wybranej gotowej baterii; nie zmieniono mechaniki ostrzału. Podniesiono alpha nieaktywnych obrysów do 0.22.
+- Nakładka używa ShipCombatController.AimCamera (nowa właściwość tylko do odczytu); Indicator Camera pozwala na jawne nadpisanie. Usunięto zależność uruchomienia nakładki UI od Shader.Find Sprites/Default; jawny CanvasRenderer i SetAllDirty po podłączeniu źródła.
+- Menu kontekstowe Fire Range Visualizer -> Diagnostyka linii celowania w Play Mode wypisuje kamerę, HasAim, Selected, liczbę gotowych baterii, włączonych linii i wierzchołków Canvas.
+- Kontrolna kompilacja pełnych źródeł: PASS. Dwie próby izolowanego Unity zatrzymały się na błędzie ILPostProcessor Configuration not initialized; nie wykonały testu geometrii ani rozgrywki. Brak potwierdzenia widoczności w WybrzezeTrzechSosen.
+- Backup w workspace ChatGPT/aim-lines-fix/backup-*. Zachowano meta; bez edycji scen/prefabów, commit/push.
+
+### Widoczność sektora po wejściu znacznika — 2026-10-12
+- FireRangeVisualizer: obrys gotowej baterii wyłącznie przy HasAim i battery.Contains(AimPoint). Contains sprawdza minimalny/maksymalny zasięg i kąt ostrzału; po wyjściu znacznika poza pole obrys znika. Zastępuje wcześniejsze pokazywanie wszystkich gotowych sektorów.
+- Zachowano grubość ekranową, kamerę, kolory, trajektorie wybranej baterii, blokadę przeładowania i oddzielny podgląd moździerza.
+- Kontrolna kompilacja pełnych źródeł PASS. Bez testu Play Mode; sprawdzić wejście/wyjście przez obie krawędzie kąta oraz minimum/maksimum zasięgu w Trzech Sosen.
+- Backup: workspace ChatGPT/aim-sector-hover/backup-*. Bez zmian scen/prefabów/meta ani commit/push.
+
+### Sektor widoczny według samego kąta — 2026-10-12
+- FireRangeVisualizer: kierunek znacznika względem baterii musi mieścić się w Firing Arc; odległość znacznika nie wpływa na widoczność obrysu. Punkt dokładnie w centrum baterii bez kierunku nie pokazuje sektora.
+- Zachowano blokadę przeładowania, osobny podgląd moździerza oraz dotychczasowe ograniczenia faktycznego strzału i trajektorii.
+- Kontrolna kompilacja pełnych źródeł PASS. Bez testu Play Mode; sprawdzić znacznik blisko/daleko w tym samym kierunku i poza krawędziami kąta.
+- Backup w workspace ChatGPT/aim-sector-angle/backup-*. Bez zmian scen/prefabów/meta ani commit/push.

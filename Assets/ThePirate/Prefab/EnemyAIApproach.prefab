@@ -51,8 +51,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
   kind: 0
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 20
+  currentHealth: 20
 --- !u!114 &7308827464483432115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +65,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
-  minimumRange: 8
-  maximumRange: 80
+  minimumRange: 5
+  maximumRange: 35
   firingArc: 70
   damage: 25
   projectileSpeed: 35
@@ -193,8 +193,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
   kind: 0
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 20
+  currentHealth: 20
 --- !u!114 &881320708808896756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,8 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
-  minimumRange: 8
-  maximumRange: 80
+  minimumRange: 5
+  maximumRange: 35
   firingArc: 70
   damage: 25
   projectileSpeed: 35
@@ -637,8 +637,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
   kind: 0
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 20
+  currentHealth: 20
 --- !u!114 &8169618381614221507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,8 +651,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
-  minimumRange: 8
-  maximumRange: 80
+  minimumRange: 5
+  maximumRange: 35
   firingArc: 70
   damage: 25
   projectileSpeed: 35
@@ -1138,7 +1138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f0d8d5e563ed848a93d8b1ed3fdc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Framework.Health.Health
-  maxHealth: 500
+  maxHealth: 100
 --- !u!114 &3741829609648203647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1153,6 +1153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.CombatShip
   team: 2
   lightlyArmored: 1
+  dockingCombatDelay: 10
 --- !u!114 &8181131011867541265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1193,6 +1194,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipCollisionDamage
   safeSpeed: 2
   damageScale: 0.02
+  impactDamageMultiplier: 0.1
+  maxImpactHealthFraction: 0.25
   pairCooldown: 0.75
   hullResistance: 1
   bowAttack: 1.5
@@ -1254,6 +1257,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.FireRangeVisualizer
   showSectors: 1
+  surfaceOffset: 0.65
+  indicatorRenderQueue: 3100
+  indicatorCamera: {fileID: 0}
+  desktopWidthPixels: 1.25
+  mobileWidthPixels: 2
+  glowPixels: 2
 --- !u!114 &1874124953809269988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1271,8 +1280,12 @@ MonoBehaviour:
   minimumRange: 15
   maximumRange: 100
   flightTime: 3
+  closeFlightTime: 1.25
   reloadTime: 12
   damage: 50
+  minimumArcHeight: 25
+  damageAllies: 0
+  damageOwner: 0
   blastRadius: 6
 --- !u!114 &7145500207418438166
 MonoBehaviour:
@@ -1293,6 +1306,17 @@ MonoBehaviour:
   resumeMargin: 5
   cruiseSpeed: 8
   homeTolerance: 3
+  enableManeuvers: 1
+  minimumDistance: 18
+  maneuverSpeed: 4.5
+  turnInDistance: 15
+  enableWeapons: 1
+  fireCheckInterval: 0.2
+  salvosStarted: 0
+  lastFiredBattery: {fileID: 0}
+  conflictingFireController: 0
+  selectedSide: 0
+  targetInBroadsideSector: 0
   currentState: 0
   target: {fileID: 0}
 --- !u!1 &8011417212125198405
@@ -1428,8 +1452,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.ShipDamageModule
   kind: 0
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 20
+  currentHealth: 20
 --- !u!114 &1204577215223972283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1442,8 +1466,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d01cfe18f5874c9884630c071159d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThePirate.Combat.WeaponBattery
-  minimumRange: 8
-  maximumRange: 80
+  minimumRange: 5
+  maximumRange: 35
   firingArc: 70
   damage: 25
   projectileSpeed: 35
